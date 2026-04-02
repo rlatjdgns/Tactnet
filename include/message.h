@@ -1,16 +1,23 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+enum class MessageType {
+    TEMPERATURE,
+    STATUS_PING,
+    ERROR,
+    RELAY
+};
+
 class Message{
 private:
     int senderID; 
     int destinationID;
     int messageID;
-    int messageType;
+    MessageType msgType;
     double payload;
 
 public:
-Message(int senderID,int destinationID,int messageID,int messageType,double payload);
+Message(int senderID,int destinationID,int messageID, MessageType msgType,double payload);
 
 void print();
 };
