@@ -18,8 +18,8 @@ private:
 
 public:
 Message(int senderID,int destinationID,int messageID, MessageType msgType,double payload);
-
-void print();
+Message() = default;
+void print() const;
 };
 
 #endif 

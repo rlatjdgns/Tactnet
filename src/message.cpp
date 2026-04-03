@@ -8,7 +8,7 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
     this-> payload = payload;
 }    
 
-void Message:: print(){
+void Message:: print() const{
     std::cout << "Sender ID: " << senderID << "\n";
     std::cout << "destination ID: " << destinationID << "\n";
     std::cout << "message ID: " << messageID << "\n";
