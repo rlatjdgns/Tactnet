@@ -10,8 +10,8 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
 
 void Message:: print() const{
     std::cout << "Sender ID: " << senderID << "\n";
-    std::cout << "destination ID: " << destinationID << "\n";
-    std::cout << "message ID: " << messageID << "\n";
+    std::cout << "Destination ID: " << destinationID << "\n";
+    std::cout << "Message ID: " << messageID << "\n";
     switch(msgType){
     case MessageType::TEMPERATURE:
         std::cout<<"TEMPERATURE\n";
@@ -29,6 +29,7 @@ void Message:: print() const{
         std::cout<<"Invalid Message Type\n";
         break;
     }
-    std::cout << "payload: " << payload << "\n";
+    std::cout << "Payload: " << payload << "\n";
+    std::cout<<"---------------\n";
 }
 

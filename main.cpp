@@ -1,4 +1,5 @@
 #include "include/node.h"
+#include <iostream>
 void printMessage(const Message& m){
     m.print();
 }
@@ -6,11 +7,18 @@ void printMessage(const Message& m){
 
 int main(){
     Message m(1,2,3,MessageType::TEMPERATURE,23.3);
-    printMessage(m);
-
     Node n1(1);
-    n1.receive_message(m);
-    n1.print_node();
+    Node n2(2);
+    for(int i=0;i<11;i++){
+        bool a = n1.send_message(m,n2);       
+        if (a==true){
+            std::cout<<"Success: Message sent \n";
+        }
+        else
+            std::cout<<"Failure: Node is full\n"; 
+
+    }
+    n2.print_node();
 
     return 0;
 }

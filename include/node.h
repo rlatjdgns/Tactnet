@@ -16,10 +16,10 @@ public:
 Node(int node_ID);
 
 //receive messages between nodes
-void receive_message(Message m);
+bool receive_message(Message m);
 
 //send messages between nodes
-void send_message(Message m);
+bool send_message(Message m, Node& receiver);
 
 void print_node();
 };
