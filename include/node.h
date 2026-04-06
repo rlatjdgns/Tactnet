@@ -11,6 +11,8 @@ private:
 int node_ID;
 Message messages[10];
 int message_count;
+Node* neighbors[2];
+int neighbor_count;
 
 public:
 Node(int node_ID);
@@ -19,7 +21,11 @@ Node(int node_ID);
 bool receive_message(Message m);
 
 //send messages between nodes
-bool send_message(Message m, Node& receiver);
+bool send_message(Message m, Node* receiver);
+
+bool add_neighbor(Node* neighbor_node);
+
+bool broadcast(Message m);
 
 void print_node();
 };
