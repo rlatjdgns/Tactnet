@@ -9,6 +9,10 @@ Node::Node(int node_ID){
     neighbors[1]=nullptr;
 }
 
+int Node::get_node_ID(){
+    return node_ID;
+}
+
 bool Node::receive_message(Message m){
     if(message_count==10){
         return false;
@@ -31,7 +35,7 @@ void Node::add_task(Task t){
 }
 
 void Node::run_task(){
-    scheduler.execute();
+    scheduler.execute(*this);
     scheduler.print();
 }
 bool Node::add_neighbor(Node* neighbor_node){

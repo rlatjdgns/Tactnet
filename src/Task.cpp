@@ -10,6 +10,10 @@ int Task::get_priority(){
     return priority; 
 }
 
+TaskType Task::get_task_type(){
+    return task_type;
+}
+
 void Task::print(){
     switch(task_type){
     case TaskType::SEND_TEMPERATURE:

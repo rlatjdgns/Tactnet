@@ -19,10 +19,10 @@ Scheduler scheduler;
 public:
 Node(int node_ID);
 
-//receive messages between nodes
+int get_node_ID();
+
 bool receive_message(Message m);
 
-//send messages between nodes
 bool send_message(Message m, Node* receiver);
 
 bool add_neighbor(Node* neighbor_node);

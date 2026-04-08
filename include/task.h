@@ -19,6 +19,7 @@ public:
 Task(TaskType task_type, int priority, int interval);
 Task() = default;
 int get_priority();
+TaskType get_task_type();
 void print();
 };
 
