@@ -33,3 +33,29 @@ void Message:: print() const{
     std::cout<<"---------------\n";
 }
 
+std::string Message::toString() const{
+    std::string result = "";
+    result += "Sender ID: " + std::to_string(senderID) + "\n";
+    result += "Destination ID: " + std::to_string(destinationID)+"\n";
+    result += "Message ID: " + std::to_string(messageID)+"\n";
+    switch(msgType){
+    case MessageType::TEMPERATURE:
+        result += "Message Type: Temperature\n";
+        break;
+    case MessageType::STATUS_PING:
+        result += "Message Type: Status Ping\n";
+        break;
+    case MessageType::ERROR:
+        result += "Message Type: Error\n";
+        break;
+    case MessageType::RELAY:
+        result += "Message Type: Relay\n";
+        break;
+    default:
+        result += "Message Type: Invalid";
+        break;
+    }
+
+    result += "Payload: " + std::to_string(payload)+"\n";
+    return result;
+};

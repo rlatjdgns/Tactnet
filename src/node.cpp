@@ -26,7 +26,14 @@ bool Node::send_message(Message m, Node* receiver){
     }
     return receiver->receive_message(m);
 }
+void Node::add_task(Task t){
+    scheduler.add_task(t);
+}
 
+void Node::run_task(){
+    scheduler.execute();
+    scheduler.print();
+}
 bool Node::add_neighbor(Node* neighbor_node){
     if(neighbor_count==2){
         return false;

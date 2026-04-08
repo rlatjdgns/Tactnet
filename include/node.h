@@ -4,6 +4,7 @@
 
 // Dependency: Node stores and transmits Message objects
 #include "message.h"
+#include "scheduler.h"
 
 class Node{
 private:
@@ -13,6 +14,7 @@ Message messages[10];
 int message_count;
 Node* neighbors[2];
 int neighbor_count;
+Scheduler scheduler;
 
 public:
 Node(int node_ID);
@@ -26,6 +28,10 @@ bool send_message(Message m, Node* receiver);
 bool add_neighbor(Node* neighbor_node);
 
 bool broadcast(Message m);
+
+void add_task(Task t);
+
+void run_task();
 
 void print_node();
 };

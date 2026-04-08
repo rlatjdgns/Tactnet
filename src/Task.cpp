@@ -22,7 +22,7 @@ void Task::print(){
         std::cout<<"Task type: "<<"Send Relay message\n";
         break;
     case TaskType::SEND_ERROR:
-        std::cout<<"Task type: "<<"Alert Error\n";
+        std::cout<<"Task type: "<<"Send Error\n";
         break;
     default:
         std::cout<<"Invalid Message Type\n";
