@@ -8,7 +8,8 @@ Each node runs bare-metal C++ software with a priority-based task scheduler and 
 Hardware:
 * 3x Raspberry Pi Zero 2W
 * 3x LoRa SX1276 915MHz
-* 3x BME280 temperature/humidity/pressure sensor
+* 1x BME280 temperature/humidity/pressure sensor
+
 Software:
 * C++ (custom task scheduler, mesh routing)
 * Python Flask (monitoring dashboard — coming soon)
