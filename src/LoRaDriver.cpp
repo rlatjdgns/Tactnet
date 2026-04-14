@@ -3,7 +3,8 @@
 #include <termios.h>
 #include <unistd.h>
 #include <string>
-
+#include <vector>
+#include <sstream>
 
 LoRaDriver::LoRaDriver(int address){
     this->address = address;
@@ -31,10 +32,39 @@ bool LoRaDriver::send(int destination, std::string message){
     return true;
 }
 
-std::string LoRaDriver::recieve(){
+ReceivedMessage LoRaDriver::recieve(){
     char buffer[256];
     int bytesRead = read(this->fd, buffer, sizeof(buffer));
-    return std::string(buffer, bytesRead);
+    if(bytesRead <= 0){
+    ReceivedMessage empty{};
+    return empty;
+    }
+    std::string str = std::string(buffer, bytesRead);
+    if(str.find("+RCV=")!=0){
+        ReceivedMessage empty{};
+        return empty;
+    }
+    str = str.substr(5,str.length()-2);
+    
+    std::vector<std::string> tokens;
+    
+    int start = 0;
+    int end = str.find(',');
+
+    while(end != std::string::npos) { 
+        tokens.push_back(str.substr(start, end - start)); 
+        start = end + 1;  
+        end = str.find(',', start); 
+    }
+    tokens.push_back(str.substr(start)); 
+
+    ReceivedMessage msg;
+    msg.senderAddress = std::stoi(tokens[0]);
+    msg.payload = tokens[2];
+    msg.rssi = std::stoi(tokens[3]);
+    msg.snr = std::stoi(tokens[4]);
+
+    return msg;
 }
 
 void LoRaDriver::disconnect() {

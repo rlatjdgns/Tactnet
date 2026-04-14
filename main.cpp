@@ -37,12 +37,20 @@ int main(){
         
 
 
-    LoRaDriver LD1 = LoRaDriver(1);
-    LD1.begin();
-    LD1.send(2,"Hello");
-    std::cout<<LD1.recieve()<<"\n";
-    LD1.disconnect();
+    // LoRaDriver LD1 = LoRaDriver(1);
+    // LD1.begin();
+    // LD1.send(2,"Hello");
+    // std::cout<<LD1.recieve()<<"\n";
+    // LD1.disconnect();
 
+    
+
+    LoRaDriver LD1(1);
+    LD1.begin();
+    ReceivedMessage msg = LD1.recieve();
+    std::cout << "From: " << msg.senderAddress << "\n";
+    std::cout << "Message: " << msg.payload << "\n";
+    std::cout << "RSSI: " << msg.rssi << "\n";  
     return 0;
 }
 
