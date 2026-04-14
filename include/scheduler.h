@@ -10,8 +10,8 @@ int task_count;
 
 public:
 Scheduler();
-bool add_task(Task task_added);
 void execute(Node& node);
+bool add_task(Task task_added);
 void print();
 
 };
