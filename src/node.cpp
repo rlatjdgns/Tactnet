@@ -27,6 +27,11 @@ bool Node::receive_message(Message m){
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
     if(msg.senderAddress!=0){
+        std::string payloadStr = msg.payload;
+        size_t pos = payloadStr.find("Payload: ");
+        if(pos != std::string::npos){
+            payloadStr = payloadStr.substr(pos + 9);
+        }
         Message m = Message(this->node_ID, msg.senderAddress, this->message_count, MessageType::TEMPERATURE, std::stod(msg.payload));
         return receive_message(m);
     }
