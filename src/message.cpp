@@ -35,9 +35,9 @@ void Message:: print() const{
 
 std::string Message::toString() const{
     std::string result = "";
-    result += "Sender ID: " + std::to_string(senderID) + "\n";
-    result += "Destination ID: " + std::to_string(destinationID)+"\n";
-    result += "Message ID: " + std::to_string(messageID)+"\n";
+    result += "Sender ID: " + std::to_string(senderID) + "|";
+    result += "Destination ID: " + std::to_string(destinationID)+"|";
+    result += "Message ID: " + std::to_string(messageID)+"|";
     switch(msgType){
     case MessageType::TEMPERATURE:
         result += "Message Type: Temperature|";
