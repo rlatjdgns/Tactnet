@@ -32,7 +32,7 @@ bool LoRaDriver::send(int destination, std::string message){
     return true;
 }
 
-ReceivedMessage LoRaDriver::recieve(){
+ReceivedMessage LoRaDriver::receive(){
     char buffer[256];
     int bytesRead = read(this->fd, buffer, sizeof(buffer));
     if(bytesRead <= 0){

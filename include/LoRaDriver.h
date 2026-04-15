@@ -19,7 +19,7 @@ public:
 LoRaDriver(int address);
 bool begin();
 bool send(int destination, std::string message);
-ReceivedMessage recieve();
+ReceivedMessage receive();
 void disconnect();
 };
 

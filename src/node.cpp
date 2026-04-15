@@ -24,6 +24,15 @@ bool Node::receive_message(Message m){
     }
 }
 
+bool Node::receive(){
+    ReceivedMessage msg = lora.receive();
+    if(msg.senderAddress!=0){
+        Message m = Message(this->node_ID, msg.senderAddress, this->message_count, MessageType::TEMPERATURE, std::stod(msg.payload));
+        return receive_message(m);
+    }
+    return false;
+}
+
 void Node::add_task(Task t){
     scheduler.add_task(t);
 }
