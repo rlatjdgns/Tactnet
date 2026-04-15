@@ -17,8 +17,10 @@ int main(int argc, char* argv[]){
         Node n1(1);
         n1.add_neighbor(2);
         Message m(1, 2, 1, MessageType::TEMPERATURE, 23.5);
-        n1.broadcast(m);
-    } 
+        bool result = n1.broadcast(m);
+        std::cout << "Broadcast result: " << result << "\n";
+    }
+    
     else if(nodeID == 2){
         Node n2(2);
         if(n2.receive()){
