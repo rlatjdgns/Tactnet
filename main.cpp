@@ -20,11 +20,11 @@ int main(int argc, char* argv[]){
         bool result = n1.broadcast(m);
         std::cout << "Broadcast result: " << result << "\n";
     }
-    
+
     else if(nodeID == 2){
         Node n2(2);
         if(n2.receive()){
-            std::cout << "Message received!\n";
+            std::cout << "Message received\n";
             n2.print_node();
         } else {
             std::cout << "No message\n";

@@ -29,7 +29,6 @@ bool Node::receive(){
     if(msg.senderAddress!=0){
         std::string payloadStr = msg.payload;
         size_t pos = payloadStr.find("Payload: ");
-        std::cout << "payloadStr: '" << payloadStr << "'\n";
         if(pos != std::string::npos){
             payloadStr = payloadStr.substr(pos + 9);
         }
@@ -71,9 +70,10 @@ bool Node::broadcast(Message m){
     return true;
 }
 void Node::print_node(){
-    std::cout<<node_ID<<"\n";
+    std::cout<<"Node ID: "<<node_ID<<"\n";
     for(int i=0; i<message_count;i++){
         std::cout<<"Message No."<<i+1<<"\n";
+        std::cout<<"---------------\n";
         messages[i].print();
     }
 }
