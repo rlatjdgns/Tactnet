@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <iostream>
 
 LoRaDriver::LoRaDriver(int address){
     this->address = address;
