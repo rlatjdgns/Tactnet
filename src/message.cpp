@@ -40,22 +40,22 @@ std::string Message::toString() const{
     result += "Message ID: " + std::to_string(messageID)+"\n";
     switch(msgType){
     case MessageType::TEMPERATURE:
-        result += "Message Type: Temperature\n";
+        result += "Message Type: Temperature|";
         break;
     case MessageType::STATUS_PING:
-        result += "Message Type: Status Ping\n";
+        result += "Message Type: Status Ping|";
         break;
     case MessageType::ERROR:
-        result += "Message Type: Error\n";
+        result += "Message Type: Error|";
         break;
     case MessageType::RELAY:
-        result += "Message Type: Relay\n";
+        result += "Message Type: Relay|";
         break;
     default:
         result += "Message Type: Invalid";
         break;
     }
 
-    result += "Payload: " + std::to_string(payload)+"\n";
+    result += "Payload: " + std::to_string(payload);
     return result;
 };
