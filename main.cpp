@@ -48,6 +48,8 @@ int main(){
     n1.add_neighbor(2);
     Message m(1, 2, 1, MessageType::TEMPERATURE, 23.5);
     n1.broadcast(m);
+    std::cout << m.toString() << "\n";
+    std::cout << "Length: " << m.toString().length() << "\n";
     return 0;
 }
 
