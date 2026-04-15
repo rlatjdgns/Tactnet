@@ -24,7 +24,7 @@ int get_node_ID();
 
 bool receive_message(Message m);
 
-bool recieve();
+bool receive();
 
 bool add_neighbor(int address);
 
