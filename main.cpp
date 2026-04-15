@@ -44,13 +44,10 @@ int main(){
     // LD1.disconnect();
 
     
-
-    LoRaDriver LD1(1);
-    LD1.begin();
-    ReceivedMessage msg = LD1.recieve();
-    std::cout << "From: " << msg.senderAddress << "\n";
-    std::cout << "Message: " << msg.payload << "\n";
-    std::cout << "RSSI: " << msg.rssi << "\n";  
+    Node n1(1);
+    n1.add_neighbor(2);
+    Message m(1, 2, 1, MessageType::TEMPERATURE, 23.5);
+    n1.broadcast(m);
     return 0;
 }
 

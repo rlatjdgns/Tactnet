@@ -5,16 +5,17 @@
 // Dependency: Node stores and transmits Message objects
 #include "message.h"
 #include "scheduler.h"
-
+#include "LoRaDriver.h"
 class Node{
 private:
 //fields
 int node_ID;
 Message messages[10];
 int message_count;
-Node* neighbors[2];
+int neighbor_addresses[2];
 int neighbor_count;
 Scheduler scheduler;
+LoRaDriver lora;
 
 public:
 Node(int node_ID);
@@ -23,9 +24,7 @@ int get_node_ID();
 
 bool receive_message(Message m);
 
-bool send_message(Message m, Node* receiver);
-
-bool add_neighbor(Node* neighbor_node);
+bool add_neighbor(int address);
 
 bool broadcast(Message m);
 
