@@ -46,7 +46,14 @@ ReceivedMessage LoRaDriver::receive(){
         buffer[totalBytes++] = c;
         if(c == '\n') break;
     }
-    std::string str = std::string(buffer, bytesRead);
+    
+    if(totalBytes <= 0){
+        ReceivedMessage empty{};
+        return empty;
+    }
+    
+    std::string str = std::string(buffer, totalBytes);
+    
     if(str.find("+RCV=")!=0){
         ReceivedMessage empty{};
         return empty;
