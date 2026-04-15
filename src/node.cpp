@@ -29,10 +29,11 @@ bool Node::receive(){
     if(msg.senderAddress!=0){
         std::string payloadStr = msg.payload;
         size_t pos = payloadStr.find("Payload: ");
+        std::cout << "payloadStr: '" << payloadStr << "'\n";
         if(pos != std::string::npos){
             payloadStr = payloadStr.substr(pos + 9);
         }
-        Message m = Message(this->node_ID, msg.senderAddress, this->message_count, MessageType::TEMPERATURE, std::stod(msg.payload));
+        Message m = Message(this->node_ID, msg.senderAddress, this->message_count, MessageType::TEMPERATURE, std::stod(payloadStr));
         return receive_message(m);
     }
     return false;
