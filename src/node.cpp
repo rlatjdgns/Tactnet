@@ -32,7 +32,7 @@ bool Node::receive(){
         if(pos != std::string::npos){
             payloadStr = payloadStr.substr(pos + 9);
         }
-        Message m = Message(this->node_ID, msg.senderAddress, this->message_count, MessageType::TEMPERATURE, std::stod(payloadStr));
+        Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::TEMPERATURE, std::stod(payloadStr));
         return receive_message(m);
     }
     return false;
