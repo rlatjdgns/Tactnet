@@ -37,8 +37,7 @@ int main(int argc, char* argv[]){
         std::cout << "Node 2 listening...\n";
         while(true){
             if(n2.receive()){
-                std::cout << "|Message received from "<<n2.messages[message_count].senderID<<"|\n";
-                std::cout << "------------------------------"
+                std::cout << "Message received!\n";
                 n2.print_node();
             }
         }
