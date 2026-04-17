@@ -35,6 +35,7 @@ int main(int argc, char* argv[]){
     else if(nodeID == 2){
         Node n2(2);
         std::cout << "Node 2 listening...\n";
+        std::cout<<"-----------------------------------\n";
         while(true){
             if(n2.receive()){
                 n2.print_node();
