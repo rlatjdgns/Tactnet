@@ -52,25 +52,14 @@ void Message:: print() const{
 std::string Message::toString() const{
     std::string typeStr;
     switch(msgType){
-    case MessageType::SENSORREADING:
-        typeStr = "SENSOR";
-        break;
-    case MessageType::STATUS_PING:
-        typeStr = "STATUS";
-        break;
-    case MessageType::ERROR:
-        typeStr = "ERROR";
-        break;
-    case MessageType::RELAY:
-        typeStr = "RELAY";
-        break;
-    default:
-        typeStr = "INVALID";
-        break;
+    case MessageType::SENSORREADING: typeStr = "S"; break;
+    case MessageType::STATUS_PING: typeStr = "P"; break;
+    case MessageType::ERROR: typeStr = "E"; break;
+    case MessageType::RELAY: typeStr = "R"; break;
+    default: typeStr = "?"; break;
     }
-    return std::to_string(senderID) + "|" +
-           std::to_string(destinationID) + "|" +
-           std::to_string(messageID) + "|" +
-           typeStr + "|" +
-           payload;
+    return std::to_string(senderID) + "," +
+           std::to_string(destinationID) + "," +
+           std::to_string(messageID) + "," +
+           typeStr + ",Payload: " + payload;
 }
