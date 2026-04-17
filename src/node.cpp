@@ -2,6 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <unistd.h>
 
 Node::Node(int node_ID):lora(node_ID){
     this->node_ID = node_ID;
