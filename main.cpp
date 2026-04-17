@@ -19,7 +19,7 @@ int main(int argc, char* argv[]){
         bme.begin();
         Node n1(1);
         n1.add_neighbor(2);
-
+        n1.add_neighbor(3);
         while(true){
             SensorReadings readings = bme.read();
             std::string payload =   std::to_string(readings.temperature) + "|" + 
