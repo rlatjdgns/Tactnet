@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
             bool result = n1.broadcast(m);
             std::cout << "Broadcasted: " << payload << "\n";
             std::cout << "Broadcast result: " << result << "\n";
-            ::sleep(5);
+            ::sleep(10);
         }
     }
 

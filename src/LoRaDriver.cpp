@@ -22,7 +22,7 @@ bool LoRaDriver::begin(){
     tcgetattr(this->fd, &tty);
     cfsetspeed(&tty, B115200);
     tty.c_cflag |= (CLOCAL | CREAD);
-    tty.c_cc[VTIME] = 50;  
+    tty.c_cc[VTIME] = 10;  
     tty.c_cc[VMIN] = 0; 
     tcsetattr(this->fd, TCSANOW, &tty);
     ::sleep(1);
