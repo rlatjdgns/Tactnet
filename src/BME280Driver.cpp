@@ -11,7 +11,7 @@ void BME280Driver::read_calibration(){
     write(fd, &reg, 1);
     
     uint8_t calib[24];
-    read(fd, calib, 24);
+    ::read(fd, calib, 24);
 
     dig_T1 = (calib[1]<<8)|calib[0];
     dig_T2 = (calib[3]<<8)|calib[2];
@@ -28,12 +28,12 @@ void BME280Driver::read_calibration(){
 
     uint8_t hreg1 = 0xA1;
     write(fd, &hreg1, 1);
-    read(fd, &dig_H1, 1);
+    ::read(fd, &dig_H1, 1);
 
     uint8_t hreg2 = 0xE1;
     write(fd, &hreg2, 1);
     uint8_t hcalib[7];
-    read(fd, hcalib, 7);
+    ::read(fd, hcalib, 7);
 
     dig_H2 = (hcalib[1] << 8) | hcalib[0];
     dig_H3 = hcalib[2];
@@ -58,7 +58,7 @@ SensorReadings BME280Driver::read(){
     uint8_t reg = 0xF7;
     write(fd,&reg,1);
     uint8_t data[8];
-    read(fd, data,8);
+    ::read(fd, data,8);
 
     int32_t raw_pressure = ((int32_t)data[0] << 12) | ((int32_t)data[1] << 4) | (data[2] >> 4);
     int32_t raw_temperature = ((int32_t)data[3] << 12) | ((int32_t)data[4] << 4) | (data[5] >> 4);
