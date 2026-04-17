@@ -22,12 +22,13 @@ int main(int argc, char* argv[]){
         n1.add_neighbor(3);
         while(true){
             SensorReadings readings = bme.read();
-            std::string payload =   std::to_string(readings.temperature) + "|" + 
+            std::string payload = std::to_string(readings.temperature) + "|" + 
                             std::to_string(readings.humidity) + "|" + 
                             std::to_string(readings.pressure);
-            Message m(1, 2, 1, MessageType::SENSORREADING, payload);
-            n1.broadcast(m);
+            Message m(1, 0, 1, MessageType::SENSORREADING, payload);
+            bool result = n1.broadcast(m);
             std::cout << "Broadcasted: " << payload << "\n";
+            std::cout << "Broadcast result: " << result << "\n";
             ::sleep(5);
         }
     }
