@@ -25,15 +25,14 @@ bool LoRaDriver::begin(){
     tty.c_cc[VTIME] = 50;  
     tty.c_cc[VMIN] = 0; 
     tcsetattr(this->fd, TCSANOW, &tty);
+    ::sleep(1);
 
     return true;
 }
 
 bool LoRaDriver::send(int destination, std::string message){
     std::string AT_message = "AT+SEND=" + std::to_string(destination) + "," + std::to_string(message.length()) + "," + message + "\r\n";
-    std::cout << "Sending: " << AT_message;
     int result = write(this->fd, AT_message.c_str(), AT_message.length());
-    std::cout << "Write result: " << result << "\n";
     return true;
 }
 
