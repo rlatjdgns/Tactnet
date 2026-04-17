@@ -67,7 +67,7 @@ bool Node::broadcast(Message m){
         if(!lora.send(neighbor_addresses[i],m.toString())){
             error_count++;
         }
-        ::sleep(2);
+        ::sleep(1);
     }
     if(error_count==neighbor_count){
         return false;
