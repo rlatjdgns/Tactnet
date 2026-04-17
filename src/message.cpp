@@ -14,7 +14,7 @@ void Message:: print() const{
     std::cout<<"-----------------------------------\n";
     switch(msgType){
     case MessageType::SENSORREADING:
-        std::cout<<"Type: SENSORREADING\n";
+        std::cout<<"Type: Sensor Reading\n";
         {
         std::stringstream ss(payload);
         std::string token;

@@ -42,6 +42,17 @@ int main(int argc, char* argv[]){
             }
         }
     }
+
+    else if(nodeID == 3){
+        Node n3(3);
+        std::cout << "Node 3 listening...\n";
+        std::cout<<"-----------------------------------\n";
+        while(true){
+            if(n3.receive()){
+                n3.print_node();
+            }
+        }
+    }
     return 0;
 }
 
