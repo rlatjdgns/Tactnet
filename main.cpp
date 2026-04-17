@@ -18,18 +18,17 @@ int main(int argc, char* argv[]){
     if(nodeID == 1){
         BME280Driver bme;
         bme.begin();
-        SensorReadings readings = bme.read();
-        std::cout << "Temperature: " << readings.temperature << "C\n";
-        std::cout << "Humidity: " << readings.humidity << "%\n";
-        std::cout << "Pressure: " << readings.pressure << " hPa\n";
         Node n1(1);
         n1.add_neighbor(2);
-        Message m(1, 2, 1, MessageType::TEMPERATURE, readings.temperature);
+
         while(true){
             SensorReadings readings = bme.read();
-            Message m(1, 2, 1, MessageType::TEMPERATURE, readings.temperature);
+            std::string payload =   std::to_string(readings.temperature) + "|" + 
+                            std::to_string(readings.humidity) + "|" + 
+                            std::to_string(readings.pressure);
+            Message m(1, 2, 1, MessageType::SENSORREADING, payload);
             n1.broadcast(m);
-            std::cout << "Broadcasted: " << readings.temperature << "C\n";
+            std::cout << "Broadcasted: " << payload << "C\n";
             ::sleep(5);
         }
     }

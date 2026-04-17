@@ -1,6 +1,7 @@
 #include "message.h"
 #include <iostream>
-Message :: Message(int senderID,int destinationID,int messageID,MessageType msgType,double payload){
+#include <sstream>
+Message :: Message(int senderID,int destinationID,int messageID,MessageType msgType,std::string payload){
     this-> senderID = senderID;
     this-> destinationID = destinationID;
     this-> messageID = messageID;
@@ -13,23 +14,39 @@ void Message:: print() const{
     std::cout << "Destination ID: " << destinationID << "\n";
     std::cout << "Message ID: " << messageID << "\n";
     switch(msgType){
-    case MessageType::TEMPERATURE:
-        std::cout<<"TEMPERATURE\n";
+    case MessageType::SENSORREADING:
+        std::cout<<"Type: SENSORREADING\n";
+        {
+        std::stringstream ss(payload);
+        std::string token;
+        std::string values[3];
+        int i = 0;
+        while(std::getline(ss, token, '|') && i < 3){
+            values[i++] = token;
+        }
+        std::cout << "Temperature: " << values[0] << "C\n";
+        std::cout << "Humidity: " << values[1] << "%\n";
+        std::cout << "Pressure: " << values[2] << " hPa\n";
+        }
+
         break;
     case MessageType::STATUS_PING:
         std::cout<<"STATUS_PING\n";
+        std::cout << "Payload: " << payload << "\n";
         break;
     case MessageType::ERROR:
         std::cout<<"ERROR\n";
+        std::cout << "Payload: " << payload << "\n";
         break;
     case MessageType::RELAY:
         std::cout<<"RELAY\n";
+        std::cout << "Payload: " << payload << "\n";
         break;
     default:
         std::cout<<"Invalid Message Type\n";
+        std::cout << "Payload: " << payload << "\n";
         break;
     }
-    std::cout << "Payload: " << payload << "\n";
     std::cout<<"---------------\n";
 }
 
@@ -39,8 +56,8 @@ std::string Message::toString() const{
     result += "Destination ID: " + std::to_string(destinationID)+"|";
     result += "Message ID: " + std::to_string(messageID)+"|";
     switch(msgType){
-    case MessageType::TEMPERATURE:
-        result += "Message Type: Temperature|";
+    case MessageType::SENSORREADING:
+        result += "Message Type: Sensor Reading|";
         break;
     case MessageType::STATUS_PING:
         result += "Message Type: Status Ping|";
@@ -56,6 +73,6 @@ std::string Message::toString() const{
         break;
     }
 
-    result += "Payload: " + std::to_string(payload);
+    result += "Payload: " + payload;
     return result;
 };

@@ -4,7 +4,7 @@
 
 
 enum class MessageType {
-    TEMPERATURE,
+    SENSORREADING,
     STATUS_PING,
     ERROR,
     RELAY
@@ -16,10 +16,10 @@ private:
     int destinationID;
     int messageID;
     MessageType msgType;
-    double payload;
+    std::string payload;
 
 public:
-Message(int senderID,int destinationID,int messageID, MessageType msgType,double payload);
+Message(int senderID,int destinationID,int messageID, MessageType msgType,std::string payload);
 Message() = default;
 void print() const;
 std::string toString() const;

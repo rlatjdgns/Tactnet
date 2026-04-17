@@ -31,19 +31,19 @@ void Scheduler::execute(Node& node){
         switch(tasks[i].get_task_type()){
         case TaskType::SEND_TEMPERATURE:
             std::cout << "Executing: SEND_TEMPERATURE\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::TEMPERATURE, 23.5));
+            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::SENSORREADING, "0.0|0.0|0.0"));
             break;
         case TaskType::SEND_STATUS:
             std::cout << "Executing: SEND_STATUS\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::STATUS_PING, 23.5));
+            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::STATUS_PING, "Status"));
             break;
         case TaskType::SEND_ERROR:
             std::cout << "Executing: SEND_ERROR\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::ERROR, 23.5));
+            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::ERROR, "error"));
             break;
         case TaskType::RELAY_MESSAGE:
             std::cout << "Executing: RELAY_MESSAGE\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::RELAY, 23.5));
+            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::RELAY, "relay"));
             break;
         default:
             std::cout << "Execution Failed\n";
