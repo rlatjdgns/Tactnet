@@ -28,6 +28,7 @@ bool Node::receive_message(Message m){
 
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
+    std::cout << "receive() called, senderAddress: " << msg.senderAddress << "\n";
     if(msg.senderAddress!=0){
         std::string payloadStr = msg.payload;
         size_t pos = payloadStr.find("Payload: ");
