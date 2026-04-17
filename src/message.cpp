@@ -11,8 +11,8 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
 
 void Message:: print() const{
     std::cout << "Sender ID: " << senderID << "\n";
-    std::cout << "Destination ID: " << destinationID << "\n";
-    std::cout << "Message ID: " << messageID << "\n";
+    //std::cout << "Destination ID: " << destinationID << "\n";
+    //std::cout << "Message ID: " << messageID << "\n";
     switch(msgType){
     case MessageType::SENSORREADING:
         std::cout<<"Type: SENSORREADING\n";
@@ -24,9 +24,9 @@ void Message:: print() const{
         while(std::getline(ss, token, '|') && i < 3){
             values[i++] = token;
         }
-        std::cout << "Temperature: " << values[0] << " °C\n";
-        std::cout << "Humidity: " << values[1] << " %\n";
-        std::cout << "Pressure: " << values[2] << " hPa\n";
+        std::cout << "      Temperature: " << values[0] << " °C\n";
+        std::cout << "      Humidity: " << values[1] << " %\n";
+        std::cout << "      Pressure: " << values[2] << " hPa\n";
         }
 
         break;
