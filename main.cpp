@@ -19,15 +19,19 @@ int main(int argc, char* argv[]){
         BME280Driver bme;
         bme.begin();
         SensorReadings readings = bme.read();
-        ::sleep(3);
         std::cout << "Temperature: " << readings.temperature << "C\n";
         std::cout << "Humidity: " << readings.humidity << "%\n";
         std::cout << "Pressure: " << readings.pressure << " hPa\n";
         Node n1(1);
         n1.add_neighbor(2);
         Message m(1, 2, 1, MessageType::TEMPERATURE, readings.temperature);
-        bool result = n1.broadcast(m);
-        std::cout << "Broadcast result: " << result << "\n";
+        while(true){
+            SensorReadings readings = bme.read();
+            Message m(1, 2, 1, MessageType::TEMPERATURE, readings.temperature);
+            n1.broadcast(m);
+            std::cout << "Broadcasted: " << readings.temperature << "C\n";
+            ::sleep(5);
+        }
     }
 
     else if(nodeID == 2){
