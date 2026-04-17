@@ -1,5 +1,7 @@
 #include "node.h"
 #include <iostream>
+#include <sstream>
+#include <vector>
 
 Node::Node(int node_ID):lora(node_ID){
     this->node_ID = node_ID;
@@ -26,13 +28,18 @@ bool Node::receive_message(Message m){
 
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
-    if(msg.senderAddress!=0){
-        std::string payloadStr = msg.payload;
-        size_t pos = payloadStr.find("Payload: ");
-        if(pos != std::string::npos){
-            payloadStr = payloadStr.substr(pos + 9);
+    if(msg.senderAddress != 0){
+        std::stringstream ss(msg.payload);
+        std::string token;
+        std::vector<std::string> tokens;
+        while(std::getline(ss, token, '|')){
+            tokens.push_back(token);
         }
-        Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, payloadStr);
+        
+        if(tokens.size() < 7) return false;
+        
+        std::string payloadStr = tokens[4] + "|" + tokens[5] + "|" + tokens[6];
+        Message m = Message(std::stoi(tokens[0]), this->node_ID, std::stoi(tokens[2]), MessageType::SENSORREADING, payloadStr);
         return receive_message(m);
     }
     return false;

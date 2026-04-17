@@ -50,28 +50,27 @@ void Message:: print() const{
 }
 
 std::string Message::toString() const{
-    std::string result = "";
-    result += "Sender ID: " + std::to_string(senderID) + "|";
-    result += "Destination ID: " + std::to_string(destinationID)+"|";
-    result += "Message ID: " + std::to_string(messageID)+"|";
+    std::string typeStr;
     switch(msgType){
     case MessageType::SENSORREADING:
-        result += "Message Type: Sensor Reading|";
+        typeStr = "SENSOR";
         break;
     case MessageType::STATUS_PING:
-        result += "Message Type: Status Ping|";
+        typeStr = "STATUS";
         break;
     case MessageType::ERROR:
-        result += "Message Type: Error|";
+        typeStr = "ERROR";
         break;
     case MessageType::RELAY:
-        result += "Message Type: Relay|";
+        typeStr = "RELAY";
         break;
     default:
-        result += "Message Type: Invalid";
+        typeStr = "INVALID";
         break;
     }
-
-    result += "Payload: " + payload;
-    return result;
-};
+    return std::to_string(senderID) + "|" +
+           std::to_string(destinationID) + "|" +
+           std::to_string(messageID) + "|" +
+           typeStr + "|" +
+           payload;
+}
