@@ -58,8 +58,8 @@ std::string Message::toString() const{
     case MessageType::RELAY: typeStr = "R"; break;
     default: typeStr = "?"; break;
     }
-    return std::to_string(senderID) + "," +
-           std::to_string(destinationID) + "," +
-           std::to_string(messageID) + "," +
-           typeStr + ",Payload: " + payload;
+    return std::to_string(senderID) + "|" +
+       std::to_string(destinationID) + "|" +
+       std::to_string(messageID) + "|" +
+       typeStr + "|Payload: " + payload;
 }
