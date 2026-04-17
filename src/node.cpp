@@ -72,7 +72,6 @@ bool Node::broadcast(Message m){
 
 void Node::print_node(){
     if(message_count > 0){
-        std::cout << "Latest message:\n";
         messages[message_count - 1].print();
     }
 }

@@ -10,9 +10,7 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
 }    
 
 void Message:: print() const{
-    std::cout << "Sender ID: " << senderID << "\n";
-    //std::cout << "Destination ID: " << destinationID << "\n";
-    //std::cout << "Message ID: " << messageID << "\n";
+    std::cout << "Message no."<< messageID << "received from Node" << senderID << "\n";
     switch(msgType){
     case MessageType::SENSORREADING:
         std::cout<<"Type: SENSORREADING\n";
