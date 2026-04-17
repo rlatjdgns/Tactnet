@@ -24,8 +24,8 @@ void Message:: print() const{
         while(std::getline(ss, token, '|') && i < 3){
             values[i++] = token;
         }
-        std::cout << "Temperature: " << values[0] << "C\n";
-        std::cout << "Humidity: " << values[1] << "%\n";
+        std::cout << "Temperature: " << values[0] << " °C\n";
+        std::cout << "Humidity: " << values[1] << " %\n";
         std::cout << "Pressure: " << values[2] << " hPa\n";
         }
 

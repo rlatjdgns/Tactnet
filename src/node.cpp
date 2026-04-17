@@ -70,10 +70,9 @@ bool Node::broadcast(Message m){
     return true;
 }
 void Node::print_node(){
-    std::cout<<"Node ID: "<<node_ID<<"\n";
-    for(int i=0; i<message_count;i++){
-        std::cout<<"Message No."<<i+1<<"\n";
-        std::cout<<"---------------\n";
-        messages[i].print();
+    std::cout << "Node ID: " << node_ID << "\n";
+    if(message_count > 0){
+        std::cout << "Latest message:\n";
+        messages[message_count - 1].print();
     }
 }

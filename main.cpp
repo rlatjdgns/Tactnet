@@ -11,7 +11,6 @@ void printMessage(const Message& m){
     m.print();
 }
 
-
 int main(int argc, char* argv[]){
     int nodeID = std::atoi(argv[1]); 
     
@@ -28,7 +27,7 @@ int main(int argc, char* argv[]){
                             std::to_string(readings.pressure);
             Message m(1, 2, 1, MessageType::SENSORREADING, payload);
             n1.broadcast(m);
-            std::cout << "Broadcasted: " << payload << "C\n";
+            std::cout << "Broadcasted: " << payload << "\n";
             ::sleep(5);
         }
     }
