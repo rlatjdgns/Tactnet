@@ -18,7 +18,7 @@ int main(int argc, char* argv[]){
         BME280Driver bme;
         bme.begin();
         SensorReadings readings = bme.read();
-        sleep(3);
+        ::sleep(3);
         std::cout << "Temperature: " << readings.temperature << "C\n";
         std::cout << "Humidity: " << readings.humidity << "%\n";
         std::cout << "Pressure: " << readings.pressure << " hPa\n";
