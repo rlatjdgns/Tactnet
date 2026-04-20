@@ -28,7 +28,6 @@ int main(int argc, char* argv[]){
             Message m(1, 0, 1, MessageType::SENSORREADING, payload);
             bool result = n1.broadcast(m);
             std::cout << "Broadcasted: " << payload << "\n";
-            std::cout << "Broadcast result: " << result << "\n";
             ::sleep(1);
         }
     }

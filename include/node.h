@@ -1,19 +1,20 @@
-//Header Guard
 #ifndef NODE_H
 #define NODE_H
 
-// Dependency: Node stores and transmits Message objects
 #include "message.h"
 #include "scheduler.h"
 #include "LoRaDriver.h"
 class Node{
 private:
-//fields
+
 int node_ID;
 Message messages[10];
 int message_count;
 int neighbor_addresses[2];
+int failure_count[2];
+bool neighbor_online[2];
 int neighbor_count;
+int broadcast_count;
 Scheduler scheduler;
 LoRaDriver lora;
 
