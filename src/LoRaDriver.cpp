@@ -33,6 +33,7 @@ bool LoRaDriver::begin(){
 bool LoRaDriver::send(int destination, std::string message){
     std::string AT_message = "AT+SEND=" + std::to_string(destination) + "," + std::to_string(message.length()) + "," + message + "\r\n";
     write(this->fd, AT_message.c_str(), AT_message.length());
+    ::usleep(200000);
     char response[64];
     int n = ::read(this->fd, response, sizeof(response));
     std::string response_string(response,n);

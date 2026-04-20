@@ -72,7 +72,7 @@ bool Node::broadcast(Message m){
         }
         if(!lora.send(neighbor_addresses[i],m.toString())){
             failure_count[i]++;
-            if(failure_count[i]>=3){
+            if(failure_count[i]>=5){
                 neighbor_online[i]=false;
                 std::cout<<"The node "<<neighbor_addresses[i]<<" is offline\n";
             }
