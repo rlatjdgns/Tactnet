@@ -35,7 +35,6 @@ bool LoRaDriver::send(int destination, std::string message){
     write(this->fd, AT_message.c_str(), AT_message.length());
     ::usleep(200000);
 
-
     std::string response_string = "";
     char c;
     int attempts = 0;
@@ -47,6 +46,7 @@ bool LoRaDriver::send(int destination, std::string message){
         }
     attempts++;
     }
+    std::cout << "Response: '" << response_string << "'\n";
     if(response_string.find("+OK") != std::string::npos){
         return true;
     } 
