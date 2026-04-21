@@ -32,7 +32,6 @@ bool Node::receive_message(Message m){
 
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
-    std::cout << "receive() senderAddress: " << msg.senderAddress << "\n";
     if(msg.senderAddress!=0){
         for(int i = 0; i < neighbor_count; i++){
             if(neighbor_addresses[i] == msg.senderAddress){
