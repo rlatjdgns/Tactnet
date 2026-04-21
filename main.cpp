@@ -6,7 +6,7 @@
 #include <string>
 #include <cstdlib>
 #include <unistd.h>
-#include <ctime>
+
 
 void printMessage(const Message& m){
     m.print();
@@ -21,21 +21,16 @@ int main(int argc, char* argv[]){
         Node n1(1);
         n1.add_neighbor(2);
         n1.add_neighbor(3);
-        time_t last_broadcast = time(nullptr);
-
+        
         while(true){
-            n1.receive(); 
-            if((time(nullptr) - last_broadcast) >= 5){
                 SensorReadings readings = bme.read();
                 std::string payload = std::to_string(readings.temperature) + "|" + 
                             std::to_string(readings.humidity) + "|" + 
                             std::to_string(readings.pressure);
                 Message m(1, 0, 1, MessageType::SENSORREADING, payload);
                 bool result = n1.broadcast(m);
-                last_broadcast = time(nullptr);
                 std::cout << "Broadcasted: " << payload << "\n";
-                n1.check_neighbors();
-            }
+                ::sleep(5);
         }
     }
 
