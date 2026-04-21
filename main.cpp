@@ -27,30 +27,35 @@ int main(int argc, char* argv[]){
                             std::to_string(readings.pressure);
             Message m(1, 0, 1, MessageType::SENSORREADING, payload);
             bool result = n1.broadcast(m);
+            n1.check_neighbors();
             std::cout << "Broadcasted: " << payload << "\n";
-            ::sleep(1);
+            ::sleep(5);
         }
     }
 
     else if(nodeID == 2){
         Node n2(2);
+        n2.add_neighbor(1);
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
             if(n2.receive()){
                 n2.print_node();
             }
+            n2.check_neighbors();
         }
     }
 
     else if(nodeID == 3){
         Node n3(3);
+        n3.add_neighbor(1);
         std::cout << "Node 3 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
             if(n3.receive()){
                 n3.print_node();
             }
+            n3.check_neighbors();
         }
     }
     return 0;

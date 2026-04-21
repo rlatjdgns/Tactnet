@@ -9,10 +9,9 @@ Node::Node(int node_ID):lora(node_ID){
     message_count = 0;
     neighbor_count = 0;
     neighbor_addresses[0] = neighbor_addresses[1] = 0;
-    failure_count[0] = failure_count[1] = 0;
-    neighbor_online[0] = neighbor_online[1] = true;
-    broadcast_count = 0;
     lora.begin();
+    neighbor_online[0]=neighbor_online[1]= true;
+    last_heard[0] = last_heard[1] = time(nullptr);
 }
 
 int Node::get_node_ID(){
@@ -33,6 +32,12 @@ bool Node::receive_message(Message m){
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
     if(msg.senderAddress!=0){
+        for(int i = 0; i < neighbor_count; i++){
+            if(neighbor_addresses[i] == msg.senderAddress){
+                last_heard[i] = time(nullptr);
+                break;
+            }
+        }
         std::string payloadStr = msg.payload;
         size_t pos = payloadStr.find("Payload: ");
         if(pos != std::string::npos){
@@ -66,41 +71,30 @@ bool Node::add_neighbor(int address){
 bool Node::broadcast(Message m){
     int error_count = 0;
     for(int i=0;i<neighbor_count;i++){
-        if(neighbor_online[i]==false){
-            error_count++;
-            continue;
-        }
         if(!lora.send(neighbor_addresses[i],m.toString())){
-            failure_count[i]++;
-            if(failure_count[i]>=5){
-                neighbor_online[i]=false;
-                std::cout<<"The node "<<neighbor_addresses[i]<<" is offline\n";
-            }
             error_count++;
-        }
-        else{
-            failure_count[i]=0;
         }
         ::sleep(1);
     }
-    broadcast_count++;
-    if(broadcast_count%2==0){
-        for(int i=0;i<neighbor_count;i++){
-            if(neighbor_online[i]==false){
-                Message temp(this-> node_ID, neighbor_addresses[i], this->message_count, MessageType::STATUS_PING, "Test");
-                if(lora.send(neighbor_addresses[i],temp.toString())){
-                    neighbor_online[i]= true;
-                    failure_count[i] =0;
-                }
-            }
-        }
-    }
-
     if(error_count==neighbor_count){
         return false;
     }
-    
     return true;
+}
+
+void Node::check_neighbors(){
+    for(int i=0; i<neighbor_count; i++){
+        if((time(nullptr) - last_heard[i])>30){
+            neighbor_online[i]= false;
+            std::cout << "Node " << neighbor_addresses[i] << " offline\n";
+        }
+        else{
+            if(neighbor_online[i]==false){
+                neighbor_online[i]=true;
+                std::cout<<"Reconnected";
+            }
+        }
+    }
 }
 
 void Node::print_node(){
