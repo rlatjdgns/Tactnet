@@ -44,15 +44,11 @@ int main(int argc, char* argv[]){
         n2.add_neighbor(1);
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
-        time_t ping_time = time(nullptr);
         while(true){
             if(n2.receive()){
                 n2.print_node();
-            }
-            if((time(nullptr) - ping_time)>10){
                 Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");
                 n2.broadcast(m);
-                ping_time = time(nullptr);
             }
             n2.check_neighbors();
         }
@@ -63,15 +59,11 @@ int main(int argc, char* argv[]){
         n3.add_neighbor(1);
         std::cout << "Node 3 listening...\n";
         std::cout<<"-----------------------------------\n";
-        time_t ping_time = time(nullptr);
         while(true){
             if(n3.receive()){
                 n3.print_node();
-            }
-            if((time(nullptr) - ping_time)>10){
                 Message m(3, 1, 1, MessageType::STATUS_PING, "Ping Test");
                 n3.broadcast(m);
-                ping_time = time(nullptr);
             }
             n3.check_neighbors();
         }
