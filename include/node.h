@@ -29,6 +29,8 @@ bool receive();
 
 bool add_neighbor(int address);
 
+bool send_to(int address, Message m);
+
 bool broadcast(Message m);
 
 void add_task(Task t);

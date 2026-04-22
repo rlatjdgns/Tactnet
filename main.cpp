@@ -44,7 +44,7 @@ int main(int argc, char* argv[]){
             if(n2.receive()){
                 n2.print_node();
                 Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");
-                n2.broadcast(m);
+                n2.send_to(1, m);
             }
 
         }
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]){
             if(n3.receive()){
                 n3.print_node();
                 Message m(3, 1, 1, MessageType::STATUS_PING, "Ping Test");
-                n3.broadcast(m);
+                n3.send_to(1, m);
             }
 
         }
