@@ -48,8 +48,7 @@ bool Node::receive(){
         else{
             for(int i =0; i<neighbor_count;i++){
                 if(neighbor_addresses[i]==std::stoi(tokens[1])){
-                    Message m = Message(msg.senderAddress, neighbor_addresses[i], this->message_count, MessageType::SENSORREADING, msg.payload);
-                    lora.send(neighbor_addresses[i],m.toString());
+                    lora.send(neighbor_addresses[i],msg.payload);
                 }                
             }
             return true;
