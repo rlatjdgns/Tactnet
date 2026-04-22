@@ -12,6 +12,13 @@ LoRaDriver::LoRaDriver(int address){
     this->fd = -1;
 }
 
+void LoRaDriver::set_encryption(){
+    std::string cmd = "AT+CPIN=4B9F2A7E1C3D8B5F6E0A4C2D9F7B3E1A\r\n";
+    write(this->fd, cmd.c_str(), cmd.length());
+    char response[64];
+    ::read(this->fd, response, sizeof(response));
+
+}
 bool LoRaDriver::begin(){
     this-> fd = open("/dev/serial0", O_RDWR);
     if(fd==-1){
@@ -26,7 +33,7 @@ bool LoRaDriver::begin(){
     tty.c_cc[VMIN] = 0; 
     tcsetattr(this->fd, TCSANOW, &tty);
     ::sleep(1);
-
+    set_encryption();
     return true;
 }
 

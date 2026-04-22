@@ -17,6 +17,7 @@ int fd;
 
 public:
 LoRaDriver(int address);
+void set_encryption();
 bool begin();
 bool send(int destination, std::string message);
 ReceivedMessage receive();
