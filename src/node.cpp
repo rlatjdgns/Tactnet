@@ -85,6 +85,8 @@ bool Node::broadcast(Message m){
 
 void Node::check_neighbors(){
     for(int i=0; i<neighbor_count; i++){
+        time_t diff = time(nullptr) - last_heard[i];
+        std::cout << "Neighbor " << neighbor_addresses[i] << " diff: " << diff << "\n";
         if((time(nullptr) - last_heard[i])>30){
             if(neighbor_online[i]==true){
                 neighbor_online[i]= false;
