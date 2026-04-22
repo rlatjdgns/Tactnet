@@ -86,17 +86,16 @@ bool Node::broadcast(Message m){
 void Node::check_neighbors(){
     for(int i=0; i<neighbor_count; i++){
         time_t diff = time(nullptr) - last_heard[i];
-        std::cout << "Neighbor " << neighbor_addresses[i] << " diff: " << diff << "\n";
         if((time(nullptr) - last_heard[i])>30){
             if(neighbor_online[i]==true){
                 neighbor_online[i]= false;
-                std::cout << "Node " << neighbor_addresses[i] << " offline\n";
+                std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";
             }
         }
         else{
             if(neighbor_online[i]==false){
                 neighbor_online[i]=true;
-                std::cout<<"Reconnected";
+                std::cout<<"Reconnected\n";
             }
         }
     }

@@ -40,12 +40,13 @@ int main(int argc, char* argv[]){
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
+            n2.check_neighbors();
             if(n2.receive()){
                 n2.print_node();
                 Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");
                 n2.broadcast(m);
             }
-            n2.check_neighbors();
+
         }
     }
 
@@ -55,12 +56,13 @@ int main(int argc, char* argv[]){
         std::cout << "Node 3 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
+            n3.check_neighbors();
             if(n3.receive()){
                 n3.print_node();
                 Message m(3, 1, 1, MessageType::STATUS_PING, "Ping Test");
                 n3.broadcast(m);
             }
-            n3.check_neighbors();
+
         }
     }
     return 0;
