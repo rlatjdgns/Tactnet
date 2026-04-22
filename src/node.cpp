@@ -40,7 +40,7 @@ bool Node::receive(){
         while(std::getline(ss, token, '|')){
         tokens.push_back(token);
         }
-        
+        std::cout << "tokens[1]: " << tokens[1] << " node_ID: " << node_ID << "\n";
         if(std::stoi(tokens[1])==node_ID){ 
             Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
             return receive_message(m);
