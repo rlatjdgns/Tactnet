@@ -76,7 +76,7 @@ bool Node::add_neighbor(int address){
     }
 }
 bool send_to(int address, Message m){
-    return lora.send(address,m.to_string());
+    return lora.send(address,m.toString());
 
 }
 
