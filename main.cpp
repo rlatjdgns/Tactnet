@@ -34,7 +34,7 @@ int main(int argc, char* argv[]){
     }
 
     else if(nodeID == 2){
-        Node n2(2);
+        Node n2(2);    
         n2.add_neighbor(1);
         n2.add_neighbor(3);
         std::cout << "Node 2 listening...\n";
