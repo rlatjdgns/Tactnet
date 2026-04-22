@@ -20,14 +20,9 @@ int Node::get_node_ID(){
 }
 
 bool Node::receive_message(Message m){
-    if(message_count==10){
-        return false;
-    }
-    else{
-        messages[message_count]=m;
-        message_count++;
-        return true;
-    }
+    messages[message_count % 10] = m;
+    message_count++;
+    return true;
 }
 
 bool Node::receive(){
@@ -39,13 +34,27 @@ bool Node::receive(){
                 break;
             }
         }
-        std::string payloadStr = msg.payload;
-        size_t pos = payloadStr.find("Payload: ");
-        if(pos != std::string::npos){
-            payloadStr = payloadStr.substr(pos + 9);
+        std::stringstream ss(msg.payload);
+        std::string token;
+        std::vector<std::string> tokens;
+        while(std::getline(ss, token, '|')){
+        tokens.push_back(token);
         }
-        Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, payloadStr);
-        return receive_message(m);
+        
+        if(std::stoi(tokens[1])==node_ID){ 
+            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
+            return receive_message(m);
+        }
+        else{
+            for(int i =0; i<neighbor_count;i++){
+                if(neighbor_addresses[i]==std::stoi(tokens[1])){
+                    Message m = Message(msg.senderAddress, neighbor_addresses[i], this->message_count, MessageType::SENSORREADING, msg.payload);
+                    lora.send(neighbor_addresses[i],m.toString());
+                }                
+            }
+            return true;
+        }
+
     }
     return false;
 }
@@ -103,6 +112,7 @@ void Node::check_neighbors(){
 
 void Node::print_node(){
     if(message_count > 0){
-        messages[message_count - 1].print();
+        messages[(message_count - 1) % 10].print();
     }
+    
 }

@@ -20,14 +20,13 @@ int main(int argc, char* argv[]){
         bme.begin();
         Node n1(1);
         n1.add_neighbor(2);
-        n1.add_neighbor(3);
         
         while(true){
                 SensorReadings readings = bme.read();
                 std::string payload = std::to_string(readings.temperature) + "|" + 
                             std::to_string(readings.humidity) + "|" + 
                             std::to_string(readings.pressure);
-                Message m(1, 0, 1, MessageType::SENSORREADING, payload);
+                Message m(1, 3, 1, MessageType::SENSORREADING, payload);
                 bool result = n1.broadcast(m);
                 std::cout << "Broadcasted: " << payload << "\n";
                 ::sleep(5);
@@ -37,6 +36,7 @@ int main(int argc, char* argv[]){
     else if(nodeID == 2){
         Node n2(2);
         n2.add_neighbor(1);
+        n2.add_neighbor(3);
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
