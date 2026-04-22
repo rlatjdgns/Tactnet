@@ -42,7 +42,6 @@ bool Node::receive(){
         }
         if(std::stoi(tokens[1])==node_ID){ 
             Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
-            std::cout << "t4: " << tokens[4] << " t5: " << tokens[5] << " t6: " << tokens[6] << "\n";
             return receive_message(m);
         }
         else{
