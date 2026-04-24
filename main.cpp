@@ -37,6 +37,7 @@ int main(int argc, char* argv[]){
         std::cout<<"-----------------------------------\n";
         while(true){
             n2.check_neighbors();
+            std::cout << "calling run_task\n";
             n2.run_task();
             if(n2.receive()){
                 n2.print_node();
@@ -55,6 +56,7 @@ int main(int argc, char* argv[]){
         std::cout<<"-----------------------------------\n";
         while(true){
             n3.check_neighbors();
+            std::cout << "calling run_task\n";
             n3.run_task();
             if(n3.receive()){
                 n3.print_node();
