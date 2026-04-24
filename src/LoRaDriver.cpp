@@ -13,23 +13,39 @@ LoRaDriver::LoRaDriver(int address){
 }
 
 void LoRaDriver::set_encryption(){
+    // set the key
     std::string cmd = "AT+CPIN=4B9F2A7E1C3D8B5F6E0A4C2D9F7B3E1A\r\n";
     write(this->fd, cmd.c_str(), cmd.length());
     
-    // read +OK response
-    char response[64];
-    int n = ::read(this->fd, response, sizeof(response));
-    std::cout << "Set response: " << std::string(response, n) << "\n";
+    // read response byte by byte until \n
+    std::string response = "";
+    char c;
+    for(int i = 0; i < 200; i++){
+        int n = ::read(this->fd, &c, 1);
+        if(n > 0){
+            response += c;
+            if(c == '\n') break;
+        }
+        ::usleep(5000);
+    }
+    std::cout << "Set response: " << response << "\n";
     
-    ::usleep(500000);
+    ::usleep(200000);
     
     // verify
     std::string check = "AT+CPIN?\r\n";
     write(this->fd, check.c_str(), check.length());
-    ::usleep(200000);
-    char response2[64];
-    int n2 = ::read(this->fd, response2, sizeof(response2));
-    std::cout << "Key stored: " << std::string(response2, n2) << "\n";
+    
+    std::string result = "";
+    for(int i = 0; i < 200; i++){
+        int n = ::read(this->fd, &c, 1);
+        if(n > 0){
+            result += c;
+            if(c == '\n') break;
+        }
+        ::usleep(5000);
+    }
+    std::cout << "Key stored: " << result << "\n";
 
 }
 bool LoRaDriver::begin(){
