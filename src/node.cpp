@@ -23,6 +23,13 @@ SensorReadings Node::read_sensor(){
 int Node::get_node_ID(){
     return node_ID;
 }
+int Node::get_neighbor_count(){
+    return neighbor_count;
+}
+
+int Node::get_neighbor_address(int i){
+    return neighbor_addresses[i];
+}
 
 bool Node::receive_message(Message m){
     messages[message_count % 10] = m;
