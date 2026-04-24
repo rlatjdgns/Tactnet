@@ -23,6 +23,7 @@ int main(int argc, char* argv[]){
         while(true){
             n1.check_neighbors();
             n1.run_task();
+            ::usleep(100000);
         }
     }
 

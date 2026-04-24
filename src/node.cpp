@@ -68,7 +68,6 @@ void Node::add_task(Task t){
 
 void Node::run_task(){
     scheduler.execute(*this);
-    scheduler.print();
 }
 bool Node::add_neighbor(int address){
     if(neighbor_count==2){
