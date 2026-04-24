@@ -38,13 +38,13 @@ int main(int argc, char* argv[]){
         while(true){
             n2.check_neighbors();
             std::cout << "calling run_task\n";
-            n2.run_task();
+            
             if(n2.receive()){
                 n2.print_node();
                 Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");
                 n2.send_to(1, m);
             }
-
+            n2.run_task();   
         }
     }
 

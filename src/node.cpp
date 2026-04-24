@@ -46,6 +46,7 @@ bool Node::receive(){
                 break;
             }
         }
+        std::cout<<"received\n";
         std::stringstream ss(msg.payload);
         std::string token;
         std::vector<std::string> tokens;
