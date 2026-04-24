@@ -16,20 +16,13 @@ int main(int argc, char* argv[]){
     int nodeID = std::atoi(argv[1]); 
     
     if(nodeID == 1){
-        BME280Driver bme;
-        bme.begin();
         Node n1(1);
         n1.add_neighbor(2);
-        
+        n1.add_task(Task(TaskType::SEND_READINGS, 1, 5));
+
         while(true){
-                SensorReadings readings = bme.read();
-                std::string payload = std::to_string(readings.temperature) + "|" + 
-                            std::to_string(readings.humidity) + "|" + 
-                            std::to_string(readings.pressure);
-                Message m(1, 3, 1, MessageType::SENSORREADING, payload);
-                bool result = n1.broadcast(m);
-                std::cout << "Broadcasted: " << payload << "\n";
-                ::sleep(5);
+            n1.check_neighbors();
+            n1.run_task();
         }
     }
 

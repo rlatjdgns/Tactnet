@@ -13,6 +13,11 @@ Node::Node(int node_ID):lora(node_ID){
     lora.begin();
     neighbor_online[0]=neighbor_online[1]= true;
     last_heard[0] = last_heard[1] = time(nullptr);
+    bme.begin();
+}
+
+SensorReadings Node::read_sensor(){
+    return bme.read();
 }
 
 int Node::get_node_ID(){
@@ -96,7 +101,6 @@ bool Node::broadcast(Message m){
 
 void Node::check_neighbors(){
     for(int i=0; i<neighbor_count; i++){
-        time_t diff = time(nullptr) - last_heard[i];
         if((time(nullptr) - last_heard[i])>30){
             if(neighbor_online[i]==true){
                 neighbor_online[i]= false;

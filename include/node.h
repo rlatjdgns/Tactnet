@@ -5,6 +5,8 @@
 #include "scheduler.h"
 #include "LoRaDriver.h"
 #include <ctime>
+#include "BME280Driver.h"
+
 class Node{
 private:
 
@@ -17,9 +19,12 @@ Scheduler scheduler;
 LoRaDriver lora;
 time_t last_heard[2];
 bool neighbor_online[2];
+BME280Driver bme;
 
 public:
 Node(int node_ID);
+
+SensorReadings read_sensor();
 
 int get_node_ID();
 

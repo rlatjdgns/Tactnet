@@ -1,7 +1,7 @@
 #include "scheduler.h"
 #include <iostream>
 #include "node.h" 
-
+#include <ctime>
 Scheduler::Scheduler(){
     task_count=0;
 
@@ -19,6 +19,7 @@ bool Scheduler::add_task(Task task_added){
 }
 
 void Scheduler::execute(Node& node){
+    
     for(int i=0;i<task_count-1;i++){
         for(int j=0;j<task_count-1-i;j++){
             if(tasks[j].get_priority()>tasks[j+1].get_priority()){
@@ -27,27 +28,33 @@ void Scheduler::execute(Node& node){
         }
     }
 
+
     for(int i=0; i<task_count; i++){
-        switch(tasks[i].get_task_type()){
-        case TaskType::SEND_TEMPERATURE:
-            std::cout << "Executing: SEND_TEMPERATURE\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::SENSORREADING, "0.0|0.0|0.0"));
-            break;
-        case TaskType::SEND_STATUS:
-            std::cout << "Executing: SEND_STATUS\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::STATUS_PING, "Status"));
-            break;
-        case TaskType::SEND_ERROR:
-            std::cout << "Executing: SEND_ERROR\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::ERROR, "error"));
-            break;
-        case TaskType::RELAY_MESSAGE:
-            std::cout << "Executing: RELAY_MESSAGE\n";
-            node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::RELAY, "relay"));
-            break;
-        default:
-            std::cout << "Execution Failed\n";
-            break;
+        if(time(nullptr) -tasks[i].get_last_executed() > tasks[i].get_interval()){
+            switch(tasks[i].get_task_type()){
+            case TaskType::SEND_READINGS:{
+                SensorReadings readings = node.read_sensor();
+                std::string payload = std::to_string(readings.temperature) + "|" + std::to_string(readings.humidity) + "|" + std::to_string(readings.pressure);
+                node.broadcast(Message(node.get_node_ID(), 3, 0, MessageType::SENSORREADING, payload));
+                break;
+            }
+            case TaskType::SEND_STATUS:
+                std::cout << "Executing: SEND_STATUS\n";
+                node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::STATUS_PING, "Status"));
+                break;
+            case TaskType::SEND_ERROR:
+                std::cout << "Executing: SEND_ERROR\n";
+                node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::ERROR, "error"));
+                break;
+            case TaskType::RELAY_MESSAGE:
+                std::cout << "Executing: RELAY_MESSAGE\n";
+                node.broadcast(Message(node.get_node_ID(), 0, 0, MessageType::RELAY, "relay"));
+                break;
+            default:
+                std::cout << "Execution Failed\n";
+                break;
+            }
+            tasks[i].set_last_executed();
         }
     }
 }
