@@ -45,6 +45,12 @@ bool Node::receive(){
         while(std::getline(ss, token, '|')){
         tokens.push_back(token);
         }
+        
+        std::cout << "tokens size: " << tokens.size() << "\n";
+        for(int i = 0; i < tokens.size(); i++){
+            std::cout << "tokens[" << i << "]: " << tokens[i] << "\n";
+        }
+        
         if(std::stoi(tokens[1])==node_ID){ 
             Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
             return receive_message(m);
@@ -52,6 +58,7 @@ bool Node::receive(){
         else{
             for(int i =0; i<neighbor_count;i++){
                 if(neighbor_addresses[i]==std::stoi(tokens[1])){
+                    std::cout << "Relaying to: " << neighbor_addresses[i] << "\n";
                     lora.send(neighbor_addresses[i],msg.payload);
                 }                
             }
