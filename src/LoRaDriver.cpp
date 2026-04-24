@@ -33,7 +33,7 @@ bool LoRaDriver::begin(){
     tty.c_cc[VMIN] = 0; 
     tcsetattr(this->fd, TCSANOW, &tty);
     ::sleep(1);
-    set_encryption();
+    //set_encryption();
     return true;
 }
 
