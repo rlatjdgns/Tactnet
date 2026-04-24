@@ -13,13 +13,23 @@ LoRaDriver::LoRaDriver(int address){
 }
 
 void LoRaDriver::set_encryption(){
+    std::string cmd = "AT+CPIN=4B9F2A7E1C3D8B5F6E0A4C2D9F7B3E1A\r\n";
+    write(this->fd, cmd.c_str(), cmd.length());
+    
+    // read +OK response
+    char response[64];
+    int n = ::read(this->fd, response, sizeof(response));
+    std::cout << "Set response: " << std::string(response, n) << "\n";
+    
+    ::usleep(500000);
+    
+    // verify
     std::string check = "AT+CPIN?\r\n";
     write(this->fd, check.c_str(), check.length());
     ::usleep(200000);
-    char response[64];
-    int n = ::read(this->fd, response, sizeof(response));
-    std::string result(response, n);
-    std::cout << "Encryption key set: " << result << "\n";
+    char response2[64];
+    int n2 = ::read(this->fd, response2, sizeof(response2));
+    std::cout << "Key stored: " << std::string(response2, n2) << "\n";
 
 }
 bool LoRaDriver::begin(){
