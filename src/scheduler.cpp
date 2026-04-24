@@ -33,6 +33,7 @@ void Scheduler::execute(Node& node){
         if(time(nullptr) -tasks[i].get_last_executed() > tasks[i].get_interval()){
             switch(tasks[i].get_task_type()){
             case TaskType::SEND_READINGS:{
+                std::cout << "Broadcasting now\n";
                 SensorReadings readings = node.read_sensor();
                 std::string payload = std::to_string(readings.temperature) + "|" + std::to_string(readings.humidity) + "|" + std::to_string(readings.pressure);
                 node.broadcast(Message(node.get_node_ID(), 3, 0, MessageType::SENSORREADING, payload));
