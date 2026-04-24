@@ -23,6 +23,7 @@ int main(int argc, char* argv[]){
         while(true){
             n1.run_task();
             n1.receive();
+            n1.print_node();
             n1.check_neighbors();
             ::usleep(100000);
         }
@@ -37,8 +38,6 @@ int main(int argc, char* argv[]){
         std::cout<<"-----------------------------------\n";
         while(true){
             n2.check_neighbors();
-            std::cout << "calling run_task\n";
-            
             if(n2.receive()){
                 n2.print_node();
                 Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");

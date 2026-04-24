@@ -28,7 +28,6 @@ void Scheduler::execute(Node& node){
         }
     }
 
-
     for(int i=0; i<task_count; i++){
         if(time(nullptr) -tasks[i].get_last_executed() > tasks[i].get_interval()){
             switch(tasks[i].get_task_type()){
