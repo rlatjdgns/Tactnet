@@ -32,7 +32,6 @@ bool Node::receive_message(Message m){
 
 bool Node::receive(){
     ReceivedMessage msg = lora.receive();
-    std::cout << "senderAddress: " << msg.senderAddress << "\n";
     if(msg.senderAddress!=0){
         for(int i = 0; i < neighbor_count; i++){
             if(neighbor_addresses[i] == msg.senderAddress){
@@ -47,11 +46,6 @@ bool Node::receive(){
         tokens.push_back(token);
         }
         
-        std::cout << "tokens size: " << tokens.size() << "\n";
-        for(int i = 0; i < tokens.size(); i++){
-            std::cout << "tokens[" << i << "]: " << tokens[i] << "\n";
-        }
-
         if(std::stoi(tokens[1])==node_ID){ 
             Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
             return receive_message(m);
