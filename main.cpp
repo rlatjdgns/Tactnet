@@ -39,7 +39,7 @@ int main(int argc, char* argv[]){
             if(n2.receive()){
                 n2.print_node();
                 SensorReadings r = n2.read_sensor();
-                if(r.temperature > 35.0 || r.humidity > 85.0 || r.temperature < 10.0){
+                if(r.temperature > 35.0 || r.humidity > 95.0 || r.temperature < 10.0){
                     std::string error_payload = std::to_string(r.temperature) + "|" + 
                                                 std::to_string(r.humidity) + "|" + 
                                                 std::to_string(r.pressure);

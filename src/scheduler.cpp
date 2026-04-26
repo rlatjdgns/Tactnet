@@ -35,9 +35,11 @@ void Scheduler::execute(Node& node){
                 std::cout << "Broadcasting now\n";
                 SensorReadings readings = node.read_sensor();
                 std::string payload = std::to_string(readings.temperature) + "|" + std::to_string(readings.humidity) + "|" + std::to_string(readings.pressure);
-                for(int j=0;j<node.get_neighbor_count();j++){
-                    node.broadcast(Message(node.get_node_ID(), node.get_neighbor_address(j), 0, MessageType::SENSORREADING, payload));    
-                }
+                Message m2(node.get_node_ID(), 2, 0, MessageType::SENSORREADING, payload);
+                node.send_to(2, m2);
+                ::sleep(1);
+                Message m3(node.get_node_ID(), 3, 0, MessageType::SENSORREADING, payload);
+                node.send_to(2, m3);
                 break;
             }
             case TaskType::SEND_STATUS:

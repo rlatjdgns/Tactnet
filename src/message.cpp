@@ -13,29 +13,38 @@ void Message:: print() const{
     std::cout<<"-----------------------------------\n";
     std::cout << "*  Message "<< messageID << " received from Node " << senderID << " *\n";
     std::cout<<"-----------------------------------\n";
+    std::stringstream ss(payload);
+    std::string token;
+    std::string values[3];
+    int i = 0;
+    while(std::getline(ss, token, '|') && i < 3){
+        values[i++] = token;
+    }
     switch(msgType){
     case MessageType::SENSORREADING:
         std::cout<<"Type: Sensor Reading\n";
         {
-        std::stringstream ss(payload);
-        std::string token;
-        std::string values[3];
-        int i = 0;
-        while(std::getline(ss, token, '|') && i < 3){
-            values[i++] = token;
-        }
         std::cout << "      Temperature: " << values[0] << " °C\n";
         std::cout << "      Humidity: " << values[1] << " %\n";
         std::cout << "      Pressure: " << values[2] << " hPa\n";
         }
-
         break;
     case MessageType::STATUS_PING:
         std::cout<<"STATUS_PING\n";
         std::cout << "Payload: " << payload << "\n";
         break;
     case MessageType::ERROR:
-        std::cout<<"ERROR\n";
+        std::cout<<"*ERROR*\n";
+        if(std::stof(values[0])>35){
+            std::cout<<"Temperature too hot \n";
+        }
+        else if(std::stof(values[0])<10){
+            std::cout<<"Temperature too cold \n";
+        }
+        else if(std::stof(values[1])>95){
+            std::cout<<"Humidity to high \n";
+        }
+        
         std::cout << "Payload: " << payload << "\n";
         break;
     case MessageType::RELAY:
