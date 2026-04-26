@@ -54,7 +54,6 @@ int main(int argc, char* argv[]){
                     n2.send_to(1, m);
                 }
             }
-            n2.check_neighbors();
         }
     }
     
@@ -81,7 +80,6 @@ int main(int argc, char* argv[]){
                     n3.send_to(1, m);
                 }
             }
-            n3.check_neighbors();
         }
     }
     return 0;
