@@ -22,6 +22,7 @@ int main(int argc, char* argv[]){
 
         while(true){
             n1.run_task();
+            n1.receive();
             // for(int i=0;i<5;i++){
             //     if(n1.receive()){
             //         n1.print_node();
@@ -43,6 +44,7 @@ int main(int argc, char* argv[]){
                 n2.print_node();
                 SensorReadings r = n2.read_sensor();
                 std::string ping_payload = std::to_string(r.temperature) + "|" + std::to_string(r.humidity) + "|" + std::to_string(r.pressure);
+                std::cout<< ping_payload<<"\n";
                 Message m(2, 1, 1, MessageType::STATUS_PING, ping_payload);
                 n2.send_to(1, m);
             }   
