@@ -63,12 +63,15 @@ bool Node::receive(){
             return receive_message(m);
         }
         else{
+            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
+            receive_message(m);    
+            
             for(int i =0; i<neighbor_count;i++){
                 if(neighbor_addresses[i]==std::stoi(tokens[1])){
                     lora.send(neighbor_addresses[i],msg.payload);
                 }                
             }
-            return false;
+            return true;
         }
 
     }
