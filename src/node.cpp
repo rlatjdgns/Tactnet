@@ -68,7 +68,7 @@ bool Node::receive(){
                     lora.send(neighbor_addresses[i],msg.payload);
                 }                
             }
-            return true;
+            return false;
         }
 
     }
