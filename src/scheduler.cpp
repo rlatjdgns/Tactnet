@@ -2,6 +2,8 @@
 #include <iostream>
 #include "node.h" 
 #include <ctime>
+#include <unistd.h>
+
 Scheduler::Scheduler(){
     task_count=0;
 
