@@ -54,7 +54,12 @@ bool Node::receive(){
         }
         
         if(std::stoi(tokens[1])==node_ID){ 
-            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
+            MessageType type;
+            if(tokens[3] == "S") type = MessageType::SENSORREADING;
+            else if(tokens[3] == "P") type = MessageType::STATUS_PING;
+            else if(tokens[3] == "E") type = MessageType::ERROR;
+            else type = MessageType::RELAY;
+            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, type, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
             return receive_message(m);
         }
         else{
