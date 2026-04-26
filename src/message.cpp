@@ -30,8 +30,10 @@ void Message:: print() const{
         }
         break;
     case MessageType::STATUS_PING:
-        std::cout<<"STATUS_PING\n";
-        std::cout << "Payload: " << payload << "\n";
+        std::cout << "Type: STATUS PING (Node " << senderID << " readings)\n";
+        std::cout << "      Temperature: " << values[0] << " °C\n";
+        std::cout << "      Humidity: " << values[1] << " %\n";
+        std::cout << "      Pressure: " << values[2] << " hPa\n";
         break;
     case MessageType::ERROR:
         std::cout<<"*ERROR*\n";

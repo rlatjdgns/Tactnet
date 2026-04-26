@@ -113,7 +113,7 @@ bool Node::broadcast(Message m){
 
 void Node::check_neighbors(){
     for(int i=0; i<neighbor_count; i++){
-        if((time(nullptr) - last_heard[i])>30){
+        if((time(nullptr) - last_heard[i])>60){
             if(neighbor_online[i]==true){
                 neighbor_online[i]= false;
                 std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";
