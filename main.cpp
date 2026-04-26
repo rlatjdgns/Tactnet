@@ -41,11 +41,11 @@ int main(int argc, char* argv[]){
         while(true){
             n2.check_neighbors();
             if(n2.receive()){
-                n2.print_node();
-                Message m(2, 1, 1, MessageType::STATUS_PING, "Ping Test");
+                SensorReadings r = n2.read_sensor();
+                std::string ping_payload = std::to_string(r.temperature) + "|" + std::to_string(r.humidity) + "|" + std::to_string(r.pressure);
+                Message m(2, 1, 1, MessageType::STATUS_PING, ping_payload);
                 n2.send_to(1, m);
-            }
-            n2.run_task();   
+            }   
         }
     }
     
