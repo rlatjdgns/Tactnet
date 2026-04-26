@@ -23,6 +23,7 @@ int main(int argc, char* argv[]){
         while(true){
             n1.run_task();
             n1.receive();
+            n1.print_node();
             // for(int i=0;i<5;i++){
             //     if(n1.receive()){
             //         n1.print_node();
