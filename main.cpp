@@ -71,7 +71,7 @@ int main(int argc, char* argv[]){
                                                 std::to_string(r.humidity) + "|" + 
                                                 std::to_string(r.pressure);
                     Message m(3, 1, 1, MessageType::ERROR, error_payload);
-                    n2.send_to(1, m);
+                    n3.send_to(1, m);
                 } else {
                     std::string ping_payload = std::to_string(r.temperature) + "|" + 
                                             std::to_string(r.humidity) + "|" + 
