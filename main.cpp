@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
         while(true){
             if(n3.receive()){
                 n3.print_node();
-                SensorReadings r = n2.read_sensor();
+                SensorReadings r = n3.read_sensor();
                 if(r.temperature > 35.0 || r.humidity > 85.0 || r.temperature < 10.0){
                     std::string error_payload = std::to_string(r.temperature) + "|" + 
                                                 std::to_string(r.humidity) + "|" + 
