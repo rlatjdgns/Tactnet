@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
         n1.add_task(Task(TaskType::SEND_READINGS, 1, 10));
 
         while(true){
-            //n1.run_task();
+            n1.run_task();
             if(n1.receive()){
                 n1.print_node();
             }
@@ -33,14 +33,26 @@ int main(int argc, char* argv[]){
         Node n2(2);    
         n2.add_neighbor(1);
         n2.add_neighbor(3);
-        n2.add_task(Task(TaskType::SEND_READINGS,1,20));
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
             if(n2.receive()){
                 n2.print_node();
+                SensorReadings r = n2.read_sensor();
+                if(r.temperature > 35.0 || r.humidity > 85.0 || r.temperature < 10.0){
+                    std::string error_payload = std::to_string(r.temperature) + "|" + 
+                                                std::to_string(r.humidity) + "|" + 
+                                                std::to_string(r.pressure);
+                    Message m(2, 1, 1, MessageType::ERROR, error_payload);
+                    n2.send_to(1, m);
+                } else {
+                    std::string ping_payload = std::to_string(r.temperature) + "|" + 
+                                            std::to_string(r.humidity) + "|" + 
+                                            std::to_string(r.pressure);
+                    Message m(2, 1, 1, MessageType::STATUS_PING, ping_payload);
+                    n2.send_to(1, m);
+                }
             }
-            n2.run_task();   
             n2.check_neighbors();
         }
     }
@@ -48,18 +60,27 @@ int main(int argc, char* argv[]){
     else if(nodeID == 3){
         Node n3(3);
         n3.add_neighbor(1);
-        n3.add_task(Task(TaskType::SEND_READINGS, 1, 30));
         std::cout << "Node 3 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
-            n3.check_neighbors();
-            n3.run_task();
             if(n3.receive()){
                 n3.print_node();
-                Message m(3, 1, 1, MessageType::STATUS_PING, "Ping Test");
-                n3.send_to(1, m);
+                SensorReadings r = n2.read_sensor();
+                if(r.temperature > 35.0 || r.humidity > 85.0 || r.temperature < 10.0){
+                    std::string error_payload = std::to_string(r.temperature) + "|" + 
+                                                std::to_string(r.humidity) + "|" + 
+                                                std::to_string(r.pressure);
+                    Message m(3, 1, 1, MessageType::ERROR, error_payload);
+                    n2.send_to(1, m);
+                } else {
+                    std::string ping_payload = std::to_string(r.temperature) + "|" + 
+                                            std::to_string(r.humidity) + "|" + 
+                                            std::to_string(r.pressure);
+                    Message m(3, 1, 1, MessageType::STATUS_PING, ping_payload);
+                    n3.send_to(1, m);
+                }
             }
-
+            n3.check_neighbors();
         }
     }
     return 0;
