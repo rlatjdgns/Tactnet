@@ -28,7 +28,6 @@ int main(int argc, char* argv[]){
                 }
             }
             n1.check_neighbors();
-            ::usleep(100000);
         }
     }
 
@@ -36,7 +35,7 @@ int main(int argc, char* argv[]){
         Node n2(2);    
         n2.add_neighbor(1);
         n2.add_neighbor(3);
-        n2.add_task(Task(TaskType::SEND_READINGS, 1, 15));
+        n2.add_task(Task(TaskType::SEND_READINGS, 1, 30));
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
@@ -49,11 +48,11 @@ int main(int argc, char* argv[]){
             n2.run_task();   
         }
     }
-
+    
     else if(nodeID == 3){
         Node n3(3);
         n3.add_neighbor(1);
-        n3.add_task(Task(TaskType::SEND_READINGS, 1, 15));
+        n3.add_task(Task(TaskType::SEND_READINGS, 1, 30));
         std::cout << "Node 3 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
