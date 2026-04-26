@@ -35,12 +35,12 @@ int main(int argc, char* argv[]){
         Node n2(2);    
         n2.add_neighbor(1);
         n2.add_neighbor(3);
-        n2.add_task(Task(TaskType::SEND_READINGS, 1, 30));
         std::cout << "Node 2 listening...\n";
         std::cout<<"-----------------------------------\n";
         while(true){
             n2.check_neighbors();
             if(n2.receive()){
+                n2.print_node();
                 SensorReadings r = n2.read_sensor();
                 std::string ping_payload = std::to_string(r.temperature) + "|" + std::to_string(r.humidity) + "|" + std::to_string(r.pressure);
                 Message m(2, 1, 1, MessageType::STATUS_PING, ping_payload);
