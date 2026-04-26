@@ -21,7 +21,7 @@ int main(int argc, char* argv[]){
         n1.add_task(Task(TaskType::SEND_READINGS, 1, 10));
 
         while(true){
-            n1.run_task();
+            //n1.run_task();
             if(n1.receive()){
                 n1.print_node();
             }
