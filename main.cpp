@@ -26,7 +26,9 @@ int main(int argc, char* argv[]) {
         n1.add_task(Task(TaskType::SEND_READINGS, 1, 5));
 
         while (true) {
+            std::cout << "run task start: " << time(nullptr) << "\n";
             n1.run_task();
+            std::cout << "run task end: " << time(nullptr) << "\n";
             for(int i = 0; i < 10; i++){
                 if (n1.receive()) n1.print_node();
             }
