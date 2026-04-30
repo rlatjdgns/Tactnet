@@ -47,7 +47,7 @@ bool LoRaDriver::send(int destination, std::string message){
     for (int i = 0; i < 100; i++) {
         int n = ::read(fd, &c, 1);
         if (n > 0) {
-            response += c;
+            response_string += c;
             if (c == '\n') break;
         }
     }
