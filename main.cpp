@@ -44,6 +44,7 @@ int main(int argc, char* argv[]) {
             if (n2.receive()) {
                 std::cout << "Received at: " << time(nullptr) << "\n";
                 n2.print_node();
+                ::usleep(500000); 
                 SensorReadings r = n2.read_sensor();
                 std::string payload = build_payload(r);
                 MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
