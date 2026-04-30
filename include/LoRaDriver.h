@@ -2,6 +2,7 @@
 #define LORADRIVER_H
 #include <string>
 
+// Parsed incoming LoRa packet from RYLR998
 struct ReceivedMessage {
     int senderAddress;
     std::string payload;
@@ -11,18 +12,16 @@ struct ReceivedMessage {
 
 class LoRaDriver{
 private:
-int address;
-int fd;
-
+    int address;
+    int fd;
 
 public:
-LoRaDriver(int address);
-void set_encryption();
-bool begin();
-bool send(int destination, std::string message);
-ReceivedMessage receive();
-void disconnect();
+    LoRaDriver(int address);
+    void set_encryption();
+    bool begin();
+    bool send(int destination, std::string message);
+    ReceivedMessage receive();
+    void disconnect();
 };
-
 
 #endif

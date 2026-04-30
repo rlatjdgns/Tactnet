@@ -1,19 +1,21 @@
 #ifndef SCHEDULER_H
 #define SCHEDULER_H
+
 #include "task.h"
+
+//Forward declaration to avoid circular dependency 
 class Node;
 
 class Scheduler{
 private:
-Task tasks [5];
-int task_count;
+    Task tasks [5];
+    int task_count;
 
 public:
-Scheduler();
-void execute(Node& node);
-bool add_task(Task task_added);
-void print();
-
+    Scheduler();
+    bool add_task(Task task);
+    void execute(Node& node);
+    void print();
 };
 
 #endif

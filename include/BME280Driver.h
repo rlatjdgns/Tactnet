@@ -1,6 +1,8 @@
 #ifndef BME280DRIVER_H
 #define BME280DRIVER_H
+
 #include <cstdint>
+
 struct SensorReadings{
     float temperature;
     float pressure;
@@ -24,4 +26,5 @@ public:
     bool begin(); 
     SensorReadings read();
 };
+
 #endif

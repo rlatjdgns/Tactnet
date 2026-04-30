@@ -10,26 +10,17 @@ Node::Node(int node_ID):lora(node_ID){
     message_count = 0;
     neighbor_count = 0;
     neighbor_addresses[0] = neighbor_addresses[1] = 0;
-    lora.begin();
     neighbor_online[0]=neighbor_online[1]= true;
     last_heard[0] = last_heard[1] = time(nullptr);
+    lora.begin();
     bme.begin();
 }
 
-SensorReadings Node::read_sensor(){
-    return bme.read();
-}
+SensorReadings Node::read_sensor(){return bme.read();}
 
-int Node::get_node_ID(){
-    return node_ID;
-}
-int Node::get_neighbor_count(){
-    return neighbor_count;
-}
-
-int Node::get_neighbor_address(int i){
-    return neighbor_addresses[i];
-}
+int Node::get_node_ID(){return node_ID;}
+int Node::get_neighbor_count(){return neighbor_count;}
+int Node::get_neighbor_address(int i){return neighbor_addresses[i];}
 
 bool Node::receive_message(Message m){
     messages[message_count % 10] = m;
@@ -37,99 +28,83 @@ bool Node::receive_message(Message m){
     return true;
 }
 
-bool Node::receive(){
+bool Node::receive() {
     ReceivedMessage msg = lora.receive();
-    if(msg.senderAddress!=0){
-        for(int i = 0; i < neighbor_count; i++){
-            if(neighbor_addresses[i] == msg.senderAddress){
-                last_heard[i] = time(nullptr);
-                break;
-            }
+    if (msg.senderAddress == 0) return false;
+
+    // update last heard for this neighbor
+    for (int i = 0; i < neighbor_count; i++) {
+        if (neighbor_addresses[i] == msg.senderAddress) {
+            last_heard[i] = time(nullptr);
+            break;
         }
-        std::stringstream ss(msg.payload);
-        std::string token;
-        std::vector<std::string> tokens;
-        while(std::getline(ss, token, '|')){
+    }
+    // parse payload fields split by |
+    std::stringstream ss(msg.payload);
+    std::string token;
+    std::vector<std::string> tokens;
+    while (std::getline(ss, token, '|')) {
         tokens.push_back(token);
-        }
-        
-        if(std::stoi(tokens[1])==node_ID){ 
-            MessageType type;
-            if(tokens[3] == "S") type = MessageType::SENSORREADING;
-            else if(tokens[3] == "P") type = MessageType::STATUS_PING;
-            else if(tokens[3] == "E") type = MessageType::ERROR;
-            else type = MessageType::RELAY;
-            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, type, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
-            return receive_message(m);
-        }
-        else{
-            Message m = Message(msg.senderAddress, this->node_ID, this->message_count, MessageType::SENSORREADING, tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6]);
-            receive_message(m);    
-            
-            for(int i =0; i<neighbor_count;i++){
-                if(neighbor_addresses[i]==std::stoi(tokens[1])){
-                    lora.send(neighbor_addresses[i],msg.payload);
-                }                
+    }
+
+    std::string sensorPayload = tokens[4].substr(9) + "|" + tokens[5] + "|" + tokens[6];
+    int destinationID = std::stoi(tokens[1]);
+
+    if (destinationID == node_ID) {
+        MessageType type;
+        if(tokens[3] == "S") type = MessageType::SENSORREADING;
+        else if(tokens[3] == "P") type = MessageType::STATUS_PING;
+        else if(tokens[3] == "E") type = MessageType::ERROR;
+        else type = MessageType::SENSORREADING;
+        Message m(msg.senderAddress, node_ID, message_count, type, sensorPayload);
+        return receive_message(m);
+    } else {
+        Message m(msg.senderAddress, node_ID, message_count, MessageType::SENSORREADING, sensorPayload);
+        receive_message(m);
+        for (int i = 0; i < neighbor_count; i++) {
+            if (neighbor_addresses[i] == destinationID) {
+                lora.send(neighbor_addresses[i], msg.payload);
             }
-            return true;
         }
-
-    }
-    return false;
-}
-
-void Node::add_task(Task t){
-    scheduler.add_task(t);
-}
-
-void Node::run_task(){
-    scheduler.execute(*this);
-}
-bool Node::add_neighbor(int address){
-    if(neighbor_count==2){
-        return false;
-    }
-    else{
-        neighbor_addresses[neighbor_count]=address;
-        neighbor_count++;
         return true;
     }
 }
-bool Node::send_to(int address, Message m){
-    return lora.send(address,m.toString());
 
-}
+void Node::add_task(Task t)  { scheduler.add_task(t); }
+void Node::run_task()        { scheduler.execute(*this); }
 
-bool Node::broadcast(Message m){
-    int error_count = 0;
-    for(int i=0;i<neighbor_count;i++){
-        if(!lora.send(neighbor_addresses[i],m.toString())){
-            error_count++;
-        }
-        ::sleep(1);
-    }
-    if(error_count==neighbor_count){
-        return false;
-    }
+bool Node::add_neighbor(int address){
+    if(neighbor_count==2) return false;
+    neighbor_addresses[neighbor_count++] = address;
     return true;
 }
 
-void Node::check_neighbors(){
-    for(int i=0; i<neighbor_count; i++){
-        if((time(nullptr) - last_heard[i])>60){
-            if(neighbor_online[i]==true){
-                neighbor_online[i]= false;
-                std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";
-            }
-        }
-        else{
-            if(neighbor_online[i]==false){
-                neighbor_online[i]=true;
-                std::cout<<"Reconnected\n";
-            }
+bool Node::send_to(int address, Message m){
+    return lora.send(address,m.toString());
+}
+
+bool Node::broadcast(Message m) {
+    int error_count = 0;
+    for (int i = 0; i < neighbor_count; i++) {
+        if (!lora.send(neighbor_addresses[i], m.toString())) error_count++;
+        ::sleep(1);
+    }
+    return error_count < neighbor_count;
+}
+
+void Node::check_neighbors() {
+    for (int i = 0; i < neighbor_count; i++) {
+        bool timed_out = (time(nullptr) - last_heard[i]) > 60;
+        if (timed_out && neighbor_online[i]) {
+            neighbor_online[i] = false;
+            std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";
+        } else if (!timed_out && !neighbor_online[i]) {
+            neighbor_online[i] = true;
+            std::cout << "Node " << neighbor_addresses[i] << " reconnected\n";
         }
     }
 }
+
 
 void Node::print_node(){
     if(message_count > 0){
