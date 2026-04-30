@@ -26,11 +26,10 @@ int main(int argc, char* argv[]) {
         n1.add_task(Task(TaskType::SEND_READINGS, 1, 5));
 
         while (true) {
-            std::cout << "run task start: " << time(nullptr) << "\n";
             n1.run_task();
-            std::cout << "run task end: " << time(nullptr) << "\n";
-            for(int i = 0; i < 10; i++){
+            for(int i = 0; i < 5; i++){
                 if (n1.receive()) n1.print_node();
+                ::usleep(200000); 
             }
             n1.check_neighbors();
         }
@@ -49,7 +48,6 @@ int main(int argc, char* argv[]) {
                 std::string payload = build_payload(r);
                 MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
                 n2.send_to(1, Message(2, 1, 1, type, payload));
-                std::cout << "Sent at: " << time(nullptr) << "\n";
             }
         }
     }
