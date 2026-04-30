@@ -64,7 +64,8 @@ bool Node::receive() {
         receive_message(m);
         for (int i = 0; i < neighbor_count; i++) {
             if (neighbor_addresses[i] == destinationID) {
-                lora.send(neighbor_addresses[i], msg.payload);
+                bool sent = lora.send(neighbor_addresses[i], msg.payload);
+                std::cout<< "result: "<<sent<<"\n"; 
             }
         }
         return true;
