@@ -30,6 +30,7 @@ bool Node::receive_message(Message m){
 
 bool Node::receive() {
     ReceivedMessage msg = lora.receive();
+    std::cout << "raw sender: " << msg.senderAddress << "\n";
     if (msg.senderAddress == 0) return false;
 
     // update last heard for this neighbor
