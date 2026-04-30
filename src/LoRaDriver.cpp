@@ -31,6 +31,13 @@ void LoRaDriver::set_encryption(){
     // AES128 key on RYLR998 module
     std::string cmd = "AT+CPIN=4B9F2A7E1C3D8B5F6E0A4C2D9F7B3E1A\r\n";
     write(this->fd, cmd.c_str(), cmd.length());
+
+    // verify key was set
+    std::string verify = "AT+CPIN?\r\n";
+    write(fd, verify.c_str(), verify.length());
+    ::usleep(200000);
+    char response[64];
+    ::read(fd, response, sizeof(response));
 }
 
 

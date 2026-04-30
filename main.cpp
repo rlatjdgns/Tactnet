@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
                 n2.print_node();
                 SensorReadings r = n2.read_sensor();
                 std::string payload = build_payload(r);
-                MessageType  type   = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
+                MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
                 n2.send_to(1, Message(2, 1, 1, type, payload));
             }
         }
@@ -60,7 +60,7 @@ int main(int argc, char* argv[]) {
                 n3.print_node();
                 SensorReadings r = n3.read_sensor();
                 std::string payload = build_payload(r);
-                MessageType  type   = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
+                MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
                 n3.send_to(1, Message(3, 1, 1, type, payload));
             }
         }
