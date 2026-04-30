@@ -41,11 +41,13 @@ int main(int argc, char* argv[]) {
         std::cout << "Node 2 listening...\n-----------------------------------\n";
         while (true) {
             if (n2.receive()) {
+                std::cout << "Received at: " << time(nullptr) << "\n";
                 n2.print_node();
                 SensorReadings r = n2.read_sensor();
                 std::string payload = build_payload(r);
                 MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
                 n2.send_to(1, Message(2, 1, 1, type, payload));
+                std::cout << "Sent at: " << time(nullptr) << "\n";
             }
         }
     }
