@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     if (nodeID == 1) {
         Node n1(1);
         n1.add_neighbor(2);
-        n1.add_task(Task(TaskType::SEND_READINGS, 1, 10));
+        n1.add_task(Task(TaskType::SEND_READINGS, 1, 5));
 
         while (true) {
             n1.run_task();
