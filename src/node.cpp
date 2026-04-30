@@ -63,7 +63,7 @@ bool Node::receive() {
         receive_message(m);
         for (int i = 0; i < neighbor_count; i++) {
             if (neighbor_addresses[i] == destinationID) {
-                std::cout<<"Relaying to "<<neighbor_addresses[i]<<"\n"
+                std::cout<<"Relaying to "<<neighbor_addresses[i]<<"\n";
                 lora.send(neighbor_addresses[i], msg.payload);
             }
         }
