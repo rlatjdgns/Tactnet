@@ -59,6 +59,7 @@ bool Node::receive() {
         Message m(msg.senderAddress, node_ID, message_count, type, sensorPayload);
         return receive_message(m);
     } else {
+        std::cout << "Relaying to " << destinationID << "\n";
         Message m(msg.senderAddress, node_ID, message_count, MessageType::SENSORREADING, sensorPayload);
         receive_message(m);
         for (int i = 0; i < neighbor_count; i++) {
