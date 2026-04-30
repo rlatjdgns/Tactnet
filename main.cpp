@@ -28,7 +28,7 @@ int main(int argc, char* argv[]) {
         while (true) {
             n1.run_task();
             std::cout<<"Run task done now listening \n";
-            for(int i = 0; i < 10; i++){
+            for(int i = 0; i < 8; i++){
                 if (n1.receive()) n1.print_node();
             }
             n1.check_neighbors();
@@ -46,7 +46,6 @@ int main(int argc, char* argv[]) {
                 SensorReadings r = n2.read_sensor();
                 std::string payload = build_payload(r);
                 MessageType type = is_alert(r) ? MessageType::ERROR : MessageType::STATUS_PING;
-                std::cout << "run_task done, now listening\n";
                 n2.send_to(1, Message(2, 1, 1, type, payload));
             }
         }
