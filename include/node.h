@@ -29,6 +29,7 @@ SensorReadings read_sensor();
 int get_node_ID();
 int get_neighbor_count();
 int get_neighbor_address(int i);
+Message get_latest_message();
 
 bool receive_message(Message m);
 

@@ -18,6 +18,8 @@ private:
 public:
 Message(int senderID,int destinationID,int messageID, MessageType msgType,std::string payload);
 Message() = default;
+int get_sender_ID();
+std::string get_payload();
 void print() const;
 std::string toString() const;
 };

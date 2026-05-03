@@ -2,6 +2,7 @@
 #include "include/scheduler.h"
 #include "include/LoRaDriver.h"
 #include <iostream>
+#include <fstream>
 #include <cstdlib>
 #include <unistd.h>
 
@@ -19,16 +20,33 @@ static bool is_alert(const SensorReadings& r) {
 
 int main(int argc, char* argv[]) {
     int nodeID = std::atoi(argv[1]);
-
+    
     if (nodeID == 1) {
         Node n1(1);
         n1.add_neighbor(2);
         n1.add_task(Task(TaskType::SEND_READINGS, 1, 5));
-
+        std::string node2_payload = "0|0|0";
+        std::string node3_payload = "0|0|0";
+        std::string alert = ""; 
+        
         while (true) {
             n1.run_task();
             for(int i = 0; i <10; i++){
-                if (n1.receive()) n1.print_node();
+                if (n1.receive()){
+                    Message latest = n1.get_latest_message();
+                    if(latest.get_sender_ID()==2) node2_payload =latest.get_payload();
+                    if(latest.get_sender_ID()==3) node3_payload = latest.get_payload();
+                    
+                    SensorReadings r1 = n1.read_sensor();
+                    std::ofstream file("/tmp/tactnet_data.json");
+                    file << "{\n";
+                    file << "  \"node1\": \"" << build_payload(r1) << "\",\n";
+                    file << "  \"node2\": \"" << node2_payload << "\",\n";
+                    file << "  \"node3\": \"" << node3_payload << "\"\n";
+                    file << "}\n";
+                    file.close();                    
+                    n1.print_node();
+                }
                 ::usleep(200000); 
             }
             n1.check_neighbors();

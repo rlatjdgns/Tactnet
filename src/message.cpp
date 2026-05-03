@@ -10,6 +10,9 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
     this-> msgType = msgType;
     this-> payload = payload;
 }    
+int Message::get_sender_ID(){return senderID;}
+
+std::string Message::get_payload(){return payload;}
 
 void Message:: print() const{
     std::cout<<"-----------------------------------\n";
