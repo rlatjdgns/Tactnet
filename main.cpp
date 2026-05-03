@@ -31,6 +31,7 @@ int main(int argc, char* argv[]) {
         
         while (true) {
             n1.run_task();
+
             for(int i = 0; i <10; i++){
                 if (n1.receive()){
                     Message latest = n1.get_latest_message();
@@ -60,7 +61,6 @@ int main(int argc, char* argv[]) {
         std::cout << "Node 2 listening...\n-----------------------------------\n";
         while (true) {
             if (n2.receive()) {
-                std::cout << "Received at: " << time(nullptr) << "\n";
                 n2.print_node();
                 ::usleep(500000); 
                 SensorReadings r = n2.read_sensor();
