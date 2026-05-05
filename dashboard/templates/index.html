@@ -2,26 +2,46 @@
 <html>
 <head>
     <title>TACTNET Dashboard</title>
-    <meta http-equiv="refresh" content="5">
     <style>
         body { font-family: Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
-        h1 { text-align: center; color: #00d4ff; }
-        .grid { display: flex; gap: 20px; justify-content: center; margin-top: 30px; }
-        .card { background: #16213e; border-radius: 10px; padding: 20px; width: 250px; }
-        .card h2 { color: #00d4ff; margin-top: 0; }
-        .value { font-size: 1.4em; margin: 8px 0; }
-        .label { color: #aaa; font-size: 0.85em; }
-        .alert { background: #ff4444; padding: 10px; border-radius: 5px; text-align: center; margin-bottom: 20px; }
-        .online { color: #00ff88; }
-        .offline { color: #ff4444; }
+        h1 { text-align: center; color: #00d4ff; letter-spacing: 3px; }
+        .subtitle { text-align: center; color: #aaa; margin-bottom: 30px; font-size: 0.9em; }
+        .grid { display: flex; gap: 20px; justify-content: center; margin-top: 20px; flex-wrap: wrap; }
+        .card { background: #16213e; border-radius: 10px; padding: 20px; width: 220px; border: 1px solid #0f3460; }
+        .card h2 { color: #00d4ff; margin-top: 0; margin-bottom: 15px; }
+        .value { font-size: 1.3em; margin: 4px 0 12px 0; }
+        .label { color: #aaa; font-size: 0.8em; text-transform: uppercase; letter-spacing: 1px; }
+        .status { font-size: 0.85em; margin-top: 15px; padding: 4px 8px; border-radius: 4px; display: inline-block; }
+        .online  { background: #0d2b1d; color: #00ff88; }
+        .offline { background: #2b0d0d; color: #ff4444; }
+        .alert-box { background: #ff4444; color: white; padding: 12px 20px; border-radius: 8px; 
+                     text-align: center; margin-bottom: 20px; font-weight: bold; display: none; }
+        .log { margin-top: 30px; background: #16213e; border-radius: 10px; padding: 20px; max-width: 720px; margin-left: auto; margin-right: auto; }
+        .log h3 { color: #00d4ff; margin-top: 0; }
+        .log-entry { padding: 6px 0; border-bottom: 1px solid #0f3460; font-size: 0.9em; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.offline { color: #ff8800; }
+        .log-entry.online { color: #00ff88; }
+        .timestamp { color: #aaa; font-size: 0.8em; margin-right: 10px; }
     </style>
 </head>
 <body>
-    <h1>TACTNET Dashboard</h1>
-    <div id="alert"></div>
+    <h1>⚡ TACTNET</h1>
+    <p class="subtitle">3-Node LoRa Mesh Network — Live Dashboard</p>
+
+    <div class="alert-box" id="alert-box"></div>
+
     <div class="grid" id="grid"></div>
 
+    <div class="log">
+        <h3>Event Log</h3>
+        <div id="log"></div>
+    </div>
+
     <script>
+        let prevStatus = { node2: null, node3: null };
+        let logEntries = [];
+
         function parse(payload) {
             const parts = payload.split('|');
             return {
@@ -31,27 +51,75 @@
             };
         }
 
+        function timestamp() {
+            return new Date().toLocaleTimeString();
+        }
+
+        function addLog(msg, type) {
+            logEntries.unshift({ msg, type, time: timestamp() });
+            if (logEntries.length > 20) logEntries.pop();
+            renderLog();
+        }
+
+        function renderLog() {
+            const log = document.getElementById('log');
+            log.innerHTML = logEntries.map(e =>
+                `<div class="log-entry ${e.type}">
+                    <span class="timestamp">${e.time}</span>${e.msg}
+                </div>`
+            ).join('');
+        }
+
         function update() {
             fetch('/data')
                 .then(r => r.json())
                 .then(data => {
+                    // alert banner
+                    const alertBox = document.getElementById('alert-box');
+                    if (data.alert) {
+                        alertBox.style.display = 'block';
+                        alertBox.textContent = '⚠️ ' + data.alert;
+                        addLog(data.alert, 'error');
+                    } else {
+                        alertBox.style.display = 'none';
+                    }
+
+                    // node cards
                     const grid = document.getElementById('grid');
                     grid.innerHTML = '';
-                    ['node1', 'node2', 'node3'].forEach((node, idx) => {
-                        const d = parse(data[node] || '0|0|0');
+                    const nodes = [
+                        { key: 'node1', label: 'Node 1 (Sensor)', status: 'online' },
+                        { key: 'node2', label: 'Node 2 (Relay)',  status: data.node2_status },
+                        { key: 'node3', label: 'Node 3 (End)',    status: data.node3_status }
+                    ];
+
+                    nodes.forEach(n => {
+                        const d = parse(data[n.key] || '0|0|0');
+                        const s = n.status || 'unknown';
                         grid.innerHTML += `
                             <div class="card">
-                                <h2>Node ${idx + 1}</h2>
+                                <h2>${n.label}</h2>
                                 <div class="label">Temperature</div>
                                 <div class="value">${d.temp} °C</div>
                                 <div class="label">Humidity</div>
                                 <div class="value">${d.hum} %</div>
                                 <div class="label">Pressure</div>
                                 <div class="value">${d.pres} hPa</div>
+                                <span class="status ${s}">${s.toUpperCase()}</span>
                             </div>`;
+
+                        // log status changes
+                        if (n.key !== 'node1') {
+                            if (prevStatus[n.key] !== null && prevStatus[n.key] !== s) {
+                                if (s === 'offline') addLog(n.label + ' disconnected', 'offline');
+                                else addLog(n.label + ' reconnected', 'online');
+                            }
+                            prevStatus[n.key] = s;
+                        }
                     });
                 });
         }
+
         update();
         setInterval(update, 5000);
     </script>

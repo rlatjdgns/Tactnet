@@ -11,7 +11,7 @@ Message :: Message(int senderID,int destinationID,int messageID,MessageType msgT
     this-> payload = payload;
 }    
 int Message::get_sender_ID(){return senderID;}
-
+MessageType Message::get_messsage_type(){return MessageType msgType;}
 std::string Message::get_payload(){return payload;}
 
 void Message:: print() const{

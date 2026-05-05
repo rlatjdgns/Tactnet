@@ -35,15 +35,24 @@ int main(int argc, char* argv[]) {
             for(int i = 0; i <10; i++){
                 if (n1.receive()){
                     Message latest = n1.get_latest_message();
-                    if(latest.get_sender_ID()==2) node2_payload =latest.get_payload();
-                    if(latest.get_sender_ID()==3) node3_payload = latest.get_payload();
-                    
+                    if (latest.get_sender_ID() == 2) {
+                        node2_payload = latest.get_payload();
+                        if (latest.get_msg_type() == MessageType::ERROR) alert = "Node 2 ALERT";
+                    }
+                    if (latest.get_sender_ID() == 3) {
+                        node3_payload = latest.get_payload();
+                        if (latest.get_msg_type() == MessageType::ERROR) alert = "Node 3 ALERT";
+                    }
+
                     SensorReadings r1 = n1.read_sensor();
                     std::ofstream file("/tmp/tactnet_data.json");
                     file << "{\n";
                     file << "  \"node1\": \"" << build_payload(r1) << "\",\n";
                     file << "  \"node2\": \"" << node2_payload << "\",\n";
-                    file << "  \"node3\": \"" << node3_payload << "\"\n";
+                    file << "  \"node3\": \"" << node3_payload << "\",\n";
+                    file << "  \"node2_status\": \"" << (n1.is_neighbor_online(0) ? "online" : "offline") << "\",\n";
+                    file << "  \"node3_status\": \"" << (n1.is_neighbor_online(1) ? "online" : "offline") << "\",\n";
+                    file << "  \"alert\": \"" << alert << "\"\n";
                     file << "}\n";
                     file.close();                    
                     n1.print_node();

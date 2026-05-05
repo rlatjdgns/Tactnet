@@ -37,6 +37,8 @@ bool receive();
 
 bool add_neighbor(int address);
 
+bool is_neighbor_online(int i);
+
 bool send_to(int address, Message m);
 
 bool broadcast(Message m);

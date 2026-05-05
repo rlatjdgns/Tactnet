@@ -23,6 +23,10 @@ int Node::get_neighbor_count(){return neighbor_count;}
 int Node::get_neighbor_address(int i){return neighbor_addresses[i];}
 Message Node::get_latest_message(){return messages[(message_count - 1) % 10];}
 
+bool Node::is_neighbor_online(int i){
+    return neighbor_online[i];
+}
+
 bool Node::receive_message(Message m){
     messages[message_count % 10] = m;
     message_count++;
