@@ -14,7 +14,7 @@
         .status { font-size: 0.85em; margin-top: 15px; padding: 4px 8px; border-radius: 4px; display: inline-block; }
         .online  { background: #0d2b1d; color: #00ff88; }
         .offline { background: #2b0d0d; color: #ff4444; }
-        .alert-box { background: #ff4444; color: white; padding: 12px 20px; border-radius: 8px; 
+        .alert-box { background: #ff4444; color: white; padding: 12px 20px; border-radius: 8px;
                      text-align: center; margin-bottom: 20px; font-weight: bold; display: none; }
         .log { margin-top: 30px; background: #16213e; border-radius: 10px; padding: 20px; max-width: 720px; margin-left: auto; margin-right: auto; }
         .log h3 { color: #00d4ff; margin-top: 0; }
@@ -23,6 +23,7 @@
         .log-entry.offline { color: #ff8800; }
         .log-entry.online { color: #00ff88; }
         .timestamp { color: #aaa; font-size: 0.8em; margin-right: 10px; }
+        .alert-value { color: #ff4444; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -88,21 +89,29 @@
                     const grid = document.getElementById('grid');
                     grid.innerHTML = '';
                     const nodes = [
-                        { key: 'node1', label: 'Node 1 (Main)', status: 'online' },
-                        { key: 'node2', label: 'Node 2 (Relay)',  status: data.node2_status },
-                        { key: 'node3', label: 'Node 3 (End)',    status: data.node2_status === 'offline' ? 'offline' : data.node3_status }
+                        { key: 'node1', label: 'Node 1 (Main)',  status: 'online' },
+                        { key: 'node2', label: 'Node 2 (Relay)', status: data.node2_status },
+                        { key: 'node3', label: 'Node 3 (End)',   status: data.node2_status === 'offline' ? 'offline' : data.node3_status }
                     ];
 
                     nodes.forEach(n => {
                         const d = parse(data[n.key] || '0|0|0');
                         const s = n.status || 'unknown';
+
+                        // determine which values exceed thresholds
+                        const tempAlert = parseFloat(d.temp) > 35 || parseFloat(d.temp) < 10;
+                        const humAlert  = parseFloat(d.hum) > 95;
+
+                        const tempClass = tempAlert ? 'alert-value' : '';
+                        const humClass  = humAlert  ? 'alert-value' : '';
+
                         grid.innerHTML += `
                             <div class="card">
                                 <h2>${n.label}</h2>
                                 <div class="label">Temperature</div>
-                                <div class="value">${d.temp} °C</div>
+                                <div class="value ${tempClass}">${d.temp} °C${tempAlert ? ' ⚠️' : ''}</div>
                                 <div class="label">Humidity</div>
-                                <div class="value">${d.hum} %</div>
+                                <div class="value ${humClass}">${d.hum} %${humAlert ? ' ⚠️' : ''}</div>
                                 <div class="label">Pressure</div>
                                 <div class="value">${d.pres} hPa</div>
                                 <span class="status ${s}">${s.toUpperCase()}</span>

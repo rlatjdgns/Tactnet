@@ -3,6 +3,8 @@
 #include "include/LoRaDriver.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <vector>
 #include <cstdlib>
 #include <unistd.h>
 
@@ -37,11 +39,36 @@ int main(int argc, char* argv[]) {
                     Message latest = n1.get_latest_message();
                     if (latest.get_sender_ID() == 2) {
                         node2_payload = latest.get_payload();
-                        if (latest.get_message_type() == MessageType::ERROR) alert = "Node 2 ALERT";
+                        if (latest.get_message_type() == MessageType::ERROR){
+                            std::string p = latest.get_payload();
+                            std::stringstream ss(p);
+                            std::string token;
+                            std::vector<std::string> tokens;
+                            while (std::getline(ss, token, '|')) tokens.push_back(token);
+                            float temp = std::stof(tokens[0]);
+                            float hum  = std::stof(tokens[1]);
+                            if (temp > 35.0f)      alert = "Node 2 ALERT: Temperature too high!";
+                            else if (temp < 10.0f) alert = "Node 2 ALERT: Temperature too low!";
+                            else if (hum > 95.0f)  alert = "Node 2 ALERT: Humidity too high!";
+                            else                   alert = "Node 2 ALERT";
+                        } 
                     }
                     if (latest.get_sender_ID() == 3) {
                         node3_payload = latest.get_payload();
-                        if (latest.get_message_type() == MessageType::ERROR) alert = "Node 3 ALERT";
+                        if (latest.get_message_type() == MessageType::ERROR){
+                            std::string p = latest.get_payload();
+                            std::stringstream ss(p);
+                            std::string token;
+                            std::vector<std::string> tokens;
+                            while (std::getline(ss, token, '|')) tokens.push_back(token);
+                            float temp = std::stof(tokens[0]);
+                            float hum  = std::stof(tokens[1]);
+                            if (temp > 35.0f)      alert = "Node 3 ALERT: Temperature too high!";
+                            else if (temp < 10.0f) alert = "Node 3 ALERT: Temperature too low!";
+                            else if (hum > 95.0f)  alert = "Node 3 ALERT: Humidity too high!";
+                            else                   alert = "Node 3 ALERT";
+                        } 
+
                     }
                     n1.print_node();
                 }
