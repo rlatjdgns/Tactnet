@@ -1,78 +1,44 @@
 # TACTNET — Tactical Mesh Network
 
 
-## Motivation
-
-Environmental monitoring systems are expensive, fragile, and dependent on centralized infrastructure. We wanted to challenge that. What if a mesh network could be built from scratch — every driver, every routing algorithm, every scheduler — using nothing but bare-metal C++ and commodity hardware? This project was born out of that question, and out of firsthand experience maintaining TICN tactical communications infrastructure during military service in the Republic of Korea Army.
-
-By fusing LoRa radio, I2C sensor drivers, and a custom priority-based scheduler, I built a self-healing mesh network that detects node failures, routes messages through relay nodes, encrypts all transmissions, and visualizes live sensor data on a web dashboard. No libraries. No shortcuts. Just hardware and code.
-
 ## Project Description
 
+TACTNET is a 3-node LoRa mesh network where each node runs custom bare-metal C++ drivers for UART radio communication and I2C sensor reading. Node 1 broadcasts BME280 sensor data every 5 seconds via the scheduler, Node 2 stores and relays to Node 3 while sending back its own readings, and Node 3 forwards acknowledgments to Node 1. All transmissions are AES128 encrypted, nodes detect failures via timestamp-based keepalive, and a Flask dashboard visualizes live sensor data from all three nodes.
 
-## Live Dashboard
+## Features
 
-[dashboard screenshot here]
+- Custom UART driver for REYAX RYLR998 LoRa module
+- Custom I2C driver for Bosch BME280 environmental sensor
+- Priority-based task scheduler with interval tracking
+- Mesh relay routing — Node 1 → Node 2 → Node 3
+- AES128 hardware encryption via RYLR998 AT+CPIN
+- Timestamp-based failover detection (30 second timeout)
+- Environmental alert system — temperature and humidity thresholds
+- Live Flask dashboard with auto-refresh and event log
 
-## Architecture Diagram
+## Hardware
 
-[diagram here]
+| Component | Quantity |
+|-----------|----------|
+| Raspberry Pi Zero 2W | 3 |
+| REYAX RYLR998 LoRa 915MHz | 3 |
+| Bosch BME280 (I2C, 3.3V) | 3 |
+| SanDisk 32GB MicroSD | 3 |
 
-## Wiring Diagram
+## Wiring
 
-[wiring diagram here]
+See `docs/wiring_diagram.png`
 
-## Hardware Components
+**RYLR998 → Pi (UART, /dev/serial0, 115200 baud):**
+- VDD → Pin 1 (3.3V) — GND → Pin 6
+- RXD → Pin 8 (GPIO14 TX) — TXD → Pin 10 (GPIO15 RX)
 
-**Sensor Node**
-- Raspberry Pi Zero 2W × 3
-- SanDisk 32GB MicroSD × 3
+**BME280 → Pi (I2C, /dev/i2c-1, 0x76):**
+- VCC → Pin 17 (3.3V) — GND → Pin 9
+- SDA → Pin 3 (GPIO2) — SCL → Pin 5 (GPIO3)
 
-**Radio Communication**
-- REYAX RYLR998 LoRa Module 915MHz × 3 (UART, AES128, SX1278)
+## Build
 
-**Environmental Sensing**
-- Bosch BME280 × 3 (I2C, temperature / humidity / pressure)
-
-**Prototyping**
-- Breadboard and jumper wires
-
-## Software Architecture
-
-**LoRaDriver** — bare-metal UART driver for RYLR998. Configures `/dev/serial0` via `termios`, sends AT commands, reads responses byte-by-byte, and handles AES128 key provisioning.
-
-**BME280Driver** — bare-metal I2C driver. Opens `/dev/i2c-1`, reads 24 bytes of factory calibration data from chip registers, and applies Bosch's official compensation formulas to produce calibrated readings.
-
-**Message** — fundamental data unit with sender ID, destination ID, message type enum (SENSORREADING, STATUS_PING, ERROR), and pipe-delimited payload. Serializes to compact format for LoRa transmission.
-
-**Task / Scheduler** — priority-based task scheduler. Tasks track their own `last_executed` timestamp. Scheduler sorts by priority using bubble sort and executes tasks whose interval has elapsed.
-
-**Node** — core class owning both LoRaDriver and BME280Driver. Manages neighbor addresses, circular message buffer, relay routing, and timestamp-based failover detection.
-
-**Flask Dashboard** — Python Flask server reads `/tmp/tactnet_data.json` written by the C++ program and serves a live auto-refreshing dashboard showing all node sensor data, online/offline status, and environmental alerts.
-
-## Build and Run
-
-**Prerequisites (each Pi):**
-```bash
-sudo apt install -y g++ git python3-pip
-pip3 install pyserial --break-system-packages
-sudo raspi-config  # enable I2C and UART
-```
-
-**Configure LoRa address (run once per node):**
-```bash
-python3 -c "
-import serial, time
-s = serial.Serial('/dev/serial0', 115200, timeout=2)
-s.write(b'AT+ADDRESS=1\r\n')  # change to 1, 2, or 3
-time.sleep(0.5)
-print(s.read_all())
-s.close()
-"
-```
-
-**Build:**
 ```bash
 git clone https://github.com/rlatjdgns/Tactnet.git
 cd Tactnet
@@ -80,27 +46,31 @@ g++ -std=c++17 src/message.cpp src/node.cpp src/task.cpp src/scheduler.cpp \
     src/LoRaDriver.cpp src/bme280_driver.cpp main.cpp -Iinclude -o tactnet
 ```
 
-**Run:**
+## Run
+
 ```bash
-./tactnet 1 
-./tactnet 2   
-./tactnet 3   
+./tactnet 1   # Node 1 — broadcaster
+./tactnet 2   # Node 2 — relay
+./tactnet 3   # Node 3 — end node
 ```
 
 **Dashboard:**
 ```bash
-pip3 install flask --break-system-packages
 cd dashboard && python3 app.py
-# open http://tactnet-node1.local:5000
+# http://tactnet-node1.local:5000
 ```
+
+## Architecture
+
+See `docs/architecture_diagram.png`
 
 ## Project Structure
 
 ```
 Tactnet/
-├── include/          # header files
-├── src/              # driver and class implementations
-├── dashboard/        # Flask web server and HTML template
-├── docs/             # wiring diagram, architecture diagram
-└── main.cpp          # node entry point (argv selects node behavior)
+├── include/      # header files
+├── src/          # driver and class implementations  
+├── dashboard/    # Flask server and HTML template
+├── docs/         # wiring and architecture diagrams
+└── main.cpp      # node entry point
 ```
