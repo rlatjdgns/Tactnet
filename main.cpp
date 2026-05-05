@@ -37,11 +37,11 @@ int main(int argc, char* argv[]) {
                     Message latest = n1.get_latest_message();
                     if (latest.get_sender_ID() == 2) {
                         node2_payload = latest.get_payload();
-                        if (latest.get_msg_type() == MessageType::ERROR) alert = "Node 2 ALERT";
+                        if (latest.get_message_type() == MessageType::ERROR) alert = "Node 2 ALERT";
                     }
                     if (latest.get_sender_ID() == 3) {
                         node3_payload = latest.get_payload();
-                        if (latest.get_msg_type() == MessageType::ERROR) alert = "Node 3 ALERT";
+                        if (latest.get_messsage_type() == MessageType::ERROR) alert = "Node 3 ALERT";
                     }
 
                     SensorReadings r1 = n1.read_sensor();
