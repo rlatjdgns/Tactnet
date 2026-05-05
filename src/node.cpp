@@ -4,30 +4,25 @@
 #include <vector>
 #include <unistd.h>
 
-
-Node::Node(int node_ID):lora(node_ID){
+Node::Node(int node_ID) : lora(node_ID) {
     this->node_ID = node_ID;
     message_count = 0;
     neighbor_count = 0;
     neighbor_addresses[0] = neighbor_addresses[1] = 0;
-    neighbor_online[0]=neighbor_online[1]= true;
+    neighbor_online[0] = neighbor_online[1] = true;
     last_heard[0] = last_heard[1] = time(nullptr);
     lora.begin();
     bme.begin();
 }
 
-SensorReadings Node::read_sensor(){return bme.read();}
+SensorReadings Node::read_sensor(){ return bme.read(); }
+int Node::get_node_ID(){ return node_ID; }
+int Node::get_neighbor_count(){ return neighbor_count; }
+int Node::get_neighbor_address(int i){ return neighbor_addresses[i]; }
+Message Node::get_latest_message(){ return messages[(message_count - 1) % 10]; }
+bool Node::is_neighbor_online(int i){ return neighbor_online[i]; }
 
-int Node::get_node_ID(){return node_ID;}
-int Node::get_neighbor_count(){return neighbor_count;}
-int Node::get_neighbor_address(int i){return neighbor_addresses[i];}
-Message Node::get_latest_message(){return messages[(message_count - 1) % 10];}
-
-bool Node::is_neighbor_online(int i){
-    return neighbor_online[i];
-}
-
-bool Node::receive_message(Message m){
+bool Node::receive_message(Message m) {
     messages[message_count % 10] = m;
     message_count++;
     return true;
@@ -37,14 +32,15 @@ bool Node::receive() {
     ReceivedMessage msg = lora.receive();
     if (msg.senderAddress == 0) return false;
 
-    // update last heard for this neighbor
+    // update last heard timestamp for this neighbor
     for (int i = 0; i < neighbor_count; i++) {
         if (neighbor_addresses[i] == msg.senderAddress) {
             last_heard[i] = time(nullptr);
             break;
         }
     }
-    // parse payload fields split by |
+
+    // parse pipe-delimited payload fields
     std::stringstream ss(msg.payload);
     std::string token;
     std::vector<std::string> tokens;
@@ -56,16 +52,20 @@ bool Node::receive() {
     int destinationID = std::stoi(tokens[1]);
 
     if (destinationID == node_ID) {
+        
         MessageType type;
-        if(tokens[3] == "S") type = MessageType::SENSORREADING;
-        else if(tokens[3] == "P") type = MessageType::STATUS_PING;
-        else if(tokens[3] == "E") type = MessageType::ERROR;
+        if (tokens[3] == "S") type = MessageType::SENSORREADING;
+        else if (tokens[3] == "P") type = MessageType::STATUS_PING;
+        else if (tokens[3] == "E") type = MessageType::ERROR;
         else type = MessageType::SENSORREADING;
+
         Message m(msg.senderAddress, node_ID, message_count, type, sensorPayload);
         return receive_message(m);
     } else {
+        // store and relay
         Message m(msg.senderAddress, node_ID, message_count, MessageType::SENSORREADING, sensorPayload);
         receive_message(m);
+
         for (int i = 0; i < neighbor_count; i++) {
             if (neighbor_addresses[i] == destinationID) {
                 lora.send(neighbor_addresses[i], msg.payload);
@@ -75,17 +75,17 @@ bool Node::receive() {
     }
 }
 
-void Node::add_task(Task t)  { scheduler.add_task(t); }
-void Node::run_task()        { scheduler.execute(*this); }
+void Node::add_task(Task t){scheduler.add_task(t); }
+void Node::run_task(){scheduler.execute(*this); }
 
-bool Node::add_neighbor(int address){
-    if(neighbor_count==2) return false;
+bool Node::add_neighbor(int address) {
+    if (neighbor_count == 2) return false;
     neighbor_addresses[neighbor_count++] = address;
     return true;
 }
 
-bool Node::send_to(int address, Message m){
-    return lora.send(address,m.toString());
+bool Node::send_to(int address, Message m) {
+    return lora.send(address, m.toString());
 }
 
 bool Node::broadcast(Message m) {
@@ -100,6 +100,7 @@ bool Node::broadcast(Message m) {
 void Node::check_neighbors() {
     for (int i = 0; i < neighbor_count; i++) {
         bool timed_out = (time(nullptr) - last_heard[i]) > 30;
+
         if (timed_out && neighbor_online[i]) {
             neighbor_online[i] = false;
             std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";
@@ -110,10 +111,8 @@ void Node::check_neighbors() {
     }
 }
 
-
-void Node::print_node(){
-    if(message_count > 0){
+void Node::print_node() {
+    if (message_count > 0) {
         messages[(message_count - 1) % 10].print();
     }
-    
 }

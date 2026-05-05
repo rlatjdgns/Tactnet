@@ -1,23 +1,26 @@
 #ifndef TASK_H
 #define TASK_H
+
 #include <ctime>
 
-enum class TaskType{
-    SEND_READINGS,
-    SEND_STATUS,
-    SEND_ERROR
+// Types of tasks the scheduler can execute
+enum class TaskType {
+    SEND_READINGS,  
+    SEND_STATUS,    
+    SEND_ERROR      
 };
 
-class Task{
+class Task {
 private:
     TaskType task_type;
-    int priority;
-    int interval;
-    time_t last_executed;
+    int priority;      
+    int interval;      
+    time_t last_executed; // Unix timestamp of last execution
 
 public:
     Task(TaskType task_type, int priority, int interval);
     Task() = default;
+
     int get_priority();
     TaskType get_task_type();
     int get_interval();
@@ -26,4 +29,4 @@ public:
     void print();
 };
 
-#endif 
+#endif
