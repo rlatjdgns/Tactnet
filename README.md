@@ -70,5 +70,5 @@ Tactnet/
 ```
 ## Demo
 
-See 'docs/Demo.gif'
+![TACTNET Demo](docs/demo.gif)
 
