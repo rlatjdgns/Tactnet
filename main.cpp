@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
                             float hum  = std::stof(tokens[1]);
                             if (temp > 35.0f)      alert = "Node 2 ALERT: Temperature too high!";
                             else if (temp < 10.0f) alert = "Node 2 ALERT: Temperature too low!";
-                            else if (hum > 95.0f)  alert = "Node 2 ALERT: Humidity too high!";
+                            else if (hum > 90.0f)  alert = "Node 2 ALERT: Humidity too high!";
                             else                   alert = "Node 2 ALERT";
                         } 
                     }

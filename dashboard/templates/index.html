@@ -100,7 +100,7 @@
 
                         // determine which values exceed thresholds
                         const tempAlert = parseFloat(d.temp) > 35 || parseFloat(d.temp) < 10;
-                        const humAlert  = parseFloat(d.hum) > 95;
+                        const humAlert  = parseFloat(d.hum) > 90;
 
                         const tempClass = tempAlert ? 'alert-value' : '';
                         const humClass  = humAlert  ? 'alert-value' : '';
