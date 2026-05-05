@@ -49,6 +49,7 @@ int main(int argc, char* argv[]) {
             }
             SensorReadings r1 = n1.read_sensor();
             std::ofstream file("/tmp/tactnet_data.json");
+            n1.check_neighbors();
             file << "{\n";
             file << "  \"node1\": \"" << build_payload(r1) << "\",\n";
             file << "  \"node2\": \"" << node2_payload << "\",\n";
@@ -58,7 +59,7 @@ int main(int argc, char* argv[]) {
             file << "  \"alert\": \"" << alert << "\"\n";
             file << "}\n";
             file.close();                    
-            n1.check_neighbors();
+
         }
     }
 
