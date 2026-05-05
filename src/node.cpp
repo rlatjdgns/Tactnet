@@ -100,7 +100,6 @@ bool Node::broadcast(Message m) {
 void Node::check_neighbors() {
     for (int i = 0; i < neighbor_count; i++) {
         bool timed_out = (time(nullptr) - last_heard[i]) > 30;
-        std::cout << "diff for Node " << neighbor_addresses[i] << ": " << (time(nullptr) - last_heard[i]) << "\n";
         if (timed_out && neighbor_online[i]) {
             neighbor_online[i] = false;
             std::cout << "Connection to Node " << neighbor_addresses[i] << " lost\n";

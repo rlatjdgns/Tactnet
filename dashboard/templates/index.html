@@ -88,9 +88,9 @@
                     const grid = document.getElementById('grid');
                     grid.innerHTML = '';
                     const nodes = [
-                        { key: 'node1', label: 'Node 1 (Sensor)', status: 'online' },
+                        { key: 'node1', label: 'Node 1 (Main)', status: 'online' },
                         { key: 'node2', label: 'Node 2 (Relay)',  status: data.node2_status },
-                        { key: 'node3', label: 'Node 3 (End)',    status: data.node3_status }
+                        { key: 'node3', label: 'Node 3 (End)',    status: data.node2_status === 'offline' ? 'offline' : data.node3_status }
                     ];
 
                     nodes.forEach(n => {

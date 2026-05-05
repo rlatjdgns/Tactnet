@@ -15,7 +15,7 @@ static std::string build_payload(const SensorReadings& r) {
 
 // helper to check if readings exceed safe thresholds
 static bool is_alert(const SensorReadings& r) {
-    return r.temperature > 35.0f || r.temperature < 10.0f || r.humidity > 95.0f;
+    return r.temperature > 35.0f || r.temperature < 10.0f || r.humidity > 90.0f;
 }
 
 int main(int argc, char* argv[]) {
