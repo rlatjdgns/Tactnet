@@ -70,5 +70,5 @@ Tactnet/
 ```
 ## Demo
 
-![TACTNET Demo](docs/demo.gif)
+![TACTNET Demo](docs/Demo.gif)
 
