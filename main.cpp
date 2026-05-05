@@ -76,6 +76,8 @@ int main(int argc, char* argv[]) {
             }
             SensorReadings r1 = n1.read_sensor();
             std::ofstream file("/tmp/tactnet_data.json");
+            if (!n1.is_neighbor_online(0)) alert = ""; 
+            if (!n1.is_neighbor_online(1)) alert = ""; 
             n1.check_neighbors();
             file << "{\n";
             file << "  \"node1\": \"" << build_payload(r1) << "\",\n";
