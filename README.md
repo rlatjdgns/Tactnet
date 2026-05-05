@@ -70,5 +70,5 @@ Tactnet/
 ```
 ## Demo
 
-[![TACTNET Demo](https://img.youtube.com/vi/-h0wWapHzws/0.jpg)](https://www.youtube.com/watch?v=-h0wWapHzws)
+See 'docs/Demo.gif'
 
