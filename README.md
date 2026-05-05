@@ -46,23 +46,23 @@ g++ -std=c++17 src/message.cpp src/node.cpp src/task.cpp src/scheduler.cpp \
     src/LoRaDriver.cpp src/bme280_driver.cpp main.cpp -Iinclude -o tactnet
 ```
 
-## Run
-
-```bash
-./tactnet 1   # Node 1 — broadcaster
-./tactnet 2   # Node 2 — relay
-./tactnet 3   # Node 3 — end node
-```
-
-**Dashboard:**
-```bash
-cd dashboard && python3 app.py
-# http://tactnet-node1.local:5000
-```
-
-## Architecture
+## Hardware Architecture
 
 See `docs/architecture_diagram.png`
+
+## Software Architecture
+
+**LoRaDriver** — UART driver for RYLR998. Configures `/dev/serial0` via `termios`, sends AT commands, reads responses byte-by-byte, and provisions AES128 key via `AT+CPIN`.
+
+**BME280Driver** — I2C driver. Reads 24 bytes of factory calibration from chip registers and applies Bosch compensation formulas to produce calibrated temperature, humidity, and pressure.
+
+**Message** — data unit with sender ID, destination ID, MessageType enum (SENSORREADING, STATUS_PING, ERROR), and pipe-delimited payload. Serializes via `toString()` for LoRa transmission.
+
+**Task / Scheduler** — priority-based scheduler. Each task tracks `last_executed` timestamp. Sorted by priority via bubble sort, executed when `time(nullptr) - last_executed >= interval`.
+
+**Node** — owns both LoRaDriver and BME280Driver. Manages neighbor addresses, circular message buffer (10 messages), relay routing, and timestamp-based failover.
+
+**Flask Dashboard** — Python Flask server reads `/tmp/tactnet_data.json` written by the C++ program and serves a live dashboard at port 5000.
 
 ## Project Structure
 
