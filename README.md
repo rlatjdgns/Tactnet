@@ -30,9 +30,6 @@ TACTNET is a 3-node LoRa mesh network where each node runs custom bare-metal C++
 
 ## Wiring
 
-<img width="500" alt="Screenshot 2026-05-06 at 1 26 11 PM" src="https://github.com/user-attachments/assets/51e2c080-83cb-4c33-a9a7-9c87f5c49c0a" />
-
-
 **RYLR998 → Pi (UART, /dev/serial0, 115200 baud):**
 - VDD → Pin 1 (3.3V)
 - GND → Pin 6 (Ground)
