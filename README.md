@@ -48,7 +48,7 @@ TACTNET is a 3-node LoRa mesh network where each node runs custom C++ drivers wr
 
 ## Hardware Architecture
 
-<img width = "500" alt = "TACTNET hardware architecture" src = "docs/architecture diagram.png">
+<img width = "500" alt = "TACTNET hardware architecture" src = "docs/architecture_diagram.png">
 
 ## Software Architecture
 
@@ -78,7 +78,7 @@ Tactnet/
 
 **1. `send()` reported success even for the failed transmission**
 - **Symptom**: Node 2 and Node 3 both marked offline while being powered on.
--**How it was found**: Looking at raw response byte and found output came in two separate reads: `Response raw: '+'` and `Response raw: '+'`. `read()` was returning partial data, so response_string.find("+OK") failed against a string containing only '+.'  
+- **How it was found**: Looking at raw response byte and found output came in two separate reads: `Response raw: '+'` and `Response raw: 'OK'`. `read()` was returning partial data, so response_string.find("+OK") failed against a string containing only '+.'  
 - **The fix**: read one byte at a time until \n instead of one bulk read().
 
 **2. Adding Node 3 silently broke Node 2, which had been working**
@@ -88,7 +88,7 @@ Tactnet/
 
 **3. Half-duplex collisions**
 - **Symptom**: Nodes 1 and 2 each transmitted correctly in isolation, but running both simultaneously broke communication in both directions
-- **How it was found**: RYLR 998 is half-duplex and cannot receive while transmitting, so independent schedules on three nodes result overlap.  
+- **How it was found**: RYLR 998 is half-duplex and cannot receive while transmitting, so independent schedules on three nodes result in overlap.  
 - **The fix**: Reverted Nodes 2 and 3 to reactive transmission. They reply only immediately after receiving, making the schedule implicitly collision-free without a shared clock.
 
 ## Limitations & Future Improvements
