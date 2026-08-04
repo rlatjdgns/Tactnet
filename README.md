@@ -96,4 +96,8 @@ Tactnet/
 - **Half-duplex radio** — the RYLR998 cannot transmit and receive simultaneously, requiring reactive timing coordination between nodes. 
 - **Static routing** — relay paths are hardcoded in `main.cpp`. A dynamic routing protocol would allow nodes to discover and adapt routes automatically.
 - **No persistent storage** — sensor readings are held in a 10-message circular buffer in RAM. Adding file logging would preserve historical data across reboots and enable trend analysis.
-- **Single point of failure** — Node 1 is the sole broadcaster and dashboard data source. Distributing the broadcasting role across all nodes would make the network more resilient. However, Half-duplex  will have to be resolved for nodes to transmit and receive simultaneously when broadcasting. 
+- **Single point of failure** — Node 1 is the sole broadcaster and dashboard data source. Distributing the broadcasting role across all nodes would make the network more resilient. However, Half-duplex  will have to be resolved for nodes to transmit and receive simultaneously when broadcasting.
+
+## Related
+
+**[FlashFS](https://github.com/rlatjdgns/FlashFS)** — bare-metal flash file system for STM32F103. Hand-written drivers, wear leveling, and per-page CRC on external SPI NOR. No HAL, no CMSIS, no libc. 
