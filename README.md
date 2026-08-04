@@ -10,14 +10,14 @@ During my service in the Republic of Korea Army, I maintained TICN C4I tactical 
 - Custom I2C driver for Bosch BME280 environmental sensor
 - Priority-based task scheduler with interval tracking
 - Mesh relay routing: Node 1 → Node 2 → Node 3
-- AES128 hardware encryption via RYLR998 AT+CPIN
+- AES128 link-layer encryption, provisioned on the RYLR998 via AT+CPIN
 - Timestamp-based failover detection (30 second timeout)
 - Environmental alert system: temperature and humidity thresholds
 - Live Flask dashboard with auto refresh and event log
 
 ## System Overview
 
-TACTNET is a 3-node LoRa mesh network where each node runs custom C++ drivers for UART radio communication and I2C sensor reading. Node 1 (Main) broadcasts BME280 sensor data every 5 seconds via the scheduler, Node 2 (Relay) stores and relays to Node 3 while sending back its own readings, and Node 3 (End) forwards acknowledgments to Node 1. All transmissions are AES128 encrypted, nodes detect failures via timestamp based keepalive, and a Flask dashboard visualizes live sensor data from all three nodes.
+TACTNET is a 3-node LoRa mesh network where each node runs custom C++ drivers written directly against the Linux device interfaces (termios on /dev/serial0 for the radio and /dev/i2c-1 for the sensor) with no third-party HAL or sensor libraries. Node 1 (Main) broadcasts BME280 sensor data every 5 seconds via the scheduler, Node 2 (Relay) stores and relays to Node 3 while sending back its own readings, and Node 3 (End) forwards acknowledgments to Node 1. All transmissions are AES128 encrypted, nodes detect failures via timestamp based keepalive, and a Flask dashboard visualizes live sensor data from all three nodes.
 
 ## Hardware
 
