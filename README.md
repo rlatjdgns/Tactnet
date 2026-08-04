@@ -44,8 +44,7 @@ TACTNET is a 3-node LoRa mesh network where each node runs custom C++ drivers wr
 
 ## Hardware Architecture
 
-<img width="500" alt="Untitled drawing" src="https://github.com/user-attachments/assets/1bc81e73-1dda-4abf-a6ad-f0e561d4c35e" />
-
+<img width = "500" alt = "TACTNET hardware architecture" src = "docs/architecture diagram.png">
 
 ## Software Architecture
 
