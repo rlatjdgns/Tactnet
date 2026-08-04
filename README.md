@@ -17,7 +17,7 @@ During my service in the Republic of Korea Army, I maintained TICN C4I tactical 
 
 ## System Overview
 
-TACTNET is a 3-node LoRa mesh network where each node runs custom bare-metal C++ drivers for UART radio communication and I2C sensor reading. Node 1 (Main) broadcasts BME280 sensor data every 5 seconds via the scheduler, Node 2 (Relay) stores and relays to Node 3 while sending back its own readings, and Node 3 (End) forwards acknowledgments to Node 1. All transmissions are AES128 encrypted, nodes detect failures via timestamp based keepalive, and a Flask dashboard visualizes live sensor data from all three nodes.
+TACTNET is a 3-node LoRa mesh network where each node runs custom C++ drivers for UART radio communication and I2C sensor reading. Node 1 (Main) broadcasts BME280 sensor data every 5 seconds via the scheduler, Node 2 (Relay) stores and relays to Node 3 while sending back its own readings, and Node 3 (End) forwards acknowledgments to Node 1. All transmissions are AES128 encrypted, nodes detect failures via timestamp based keepalive, and a Flask dashboard visualizes live sensor data from all three nodes.
 
 ## Hardware
 
@@ -82,4 +82,4 @@ Tactnet/
 - **Half-duplex radio** — the RYLR998 cannot transmit and receive simultaneously, requiring reactive timing coordination between nodes. 
 - **Static routing** — relay paths are hardcoded in `main.cpp`. A dynamic routing protocol would allow nodes to discover and adapt routes automatically.
 - **No persistent storage** — sensor readings are held in a 10-message circular buffer in RAM. Adding file logging would preserve historical data across reboots and enable trend analysis.
-- **Single point of failure** — Node 1 is the sole broadcaster and dashboard data source. Distributing the broadcasting role across all nodes would make the network more resilient. However, Half-duplex  will have to be resolved for nodes to trasmit and receive simulatenously when broadcasting. 
+- **Single point of failure** — Node 1 is the sole broadcaster and dashboard data source. Distributing the broadcasting role across all nodes would make the network more resilient. However, Half-duplex  will have to be resolved for nodes to transmit and receive simultaneously when broadcasting. 
